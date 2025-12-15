@@ -1,0 +1,69 @@
+[gd_scene load_steps=11 format=3 uid="uid://dhxhu0o08oib5"]
+
+[ext_resource type="Texture2D" uid="uid://bdpuguus8apva" path="res://Assets/FallEffect.png" id="1_3j0fa"]
+[ext_resource type="Script" uid="uid://dttmitoqfinmk" path="res://Scripts/Effect.cs" id="1_q1a80"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q1a80"]
+atlas = ExtResource("1_3j0fa")
+region = Rect2(0, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ikok"]
+atlas = ExtResource("1_3j0fa")
+region = Rect2(640, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_842qd"]
+atlas = ExtResource("1_3j0fa")
+region = Rect2(1280, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_afgye"]
+atlas = ExtResource("1_3j0fa")
+region = Rect2(1920, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ria4k"]
+atlas = ExtResource("1_3j0fa")
+region = Rect2(2560, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kq6vi"]
+atlas = ExtResource("1_3j0fa")
+region = Rect2(3200, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p03n0"]
+atlas = ExtResource("1_3j0fa")
+region = Rect2(3840, 0, 640, 640)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kejxy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q1a80")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ikok")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_842qd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_afgye")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ria4k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kq6vi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p03n0")
+}],
+"loop": false,
+"name": &"default",
+"speed": 30.0
+}]
+
+[node name="FallDustEffect" type="Node2D"]
+script = ExtResource("1_q1a80")
+timer1 = 0.25
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_kejxy")
+autoplay = "default"
