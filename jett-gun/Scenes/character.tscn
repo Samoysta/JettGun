@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://d2q66qq1nxlqw" path="res://Scenes/bullet_1.tscn" id="9_wbia7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_he2x2"]
-size = Vector2(46, 59.09089)
+size = Vector2(46, 52.272705)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ivxna"]
 atlas = ExtResource("5_reotu")
@@ -490,22 +490,23 @@ radius = 77.88453
 collision_layer = 2
 script = ExtResource("1_lkv7d")
 Speed = 500.0
-JumpVelocity = 1300.0
+JumpVelocity = 700.0
 accel = 4000.0
 gravity = 4.0
 JumpEffect = ExtResource("2_owm7s")
 FallEffect = ExtResource("3_nytcm")
 bullet1 = ExtResource("9_wbia7")
 fireEffect1 = ExtResource("5_kq7hj")
+jumpTimer = 0.16
 coyotoTimer = 0.02
 
 [node name="CharacterHitBox" type="CollisionShape2D" parent="."]
-position = Vector2(-5, 4.000001)
+position = Vector2(-5, 10.000004)
 scale = Vector2(1, 1.7600007)
 shape = SubResource("RectangleShape2D_he2x2")
 
 [node name="Sprite" type="Node2D" parent="CharacterHitBox"]
-position = Vector2(3, -2.272726)
+position = Vector2(3, -5.681817)
 
 [node name="Sprite2" type="Node2D" parent="CharacterHitBox/Sprite"]
 position = Vector2(0, 31.818167)

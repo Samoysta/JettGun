@@ -15,7 +15,10 @@ public partial class Character : CharacterBody2D
     [Export] PackedScene FallEffect;
     [Export] PackedScene bullet1;
     [Export] PackedScene fireEffect1;
+    [Export] float jumpTimer;
     [Export] float coyotoTimer;
+    float jTimer;
+    bool isJumping;
     float ctimer;
 	List<Node2D> Interact = new List<Node2D>();
     List<Bullet1> bullets = new List<Bullet1>();
@@ -50,14 +53,6 @@ public partial class Character : CharacterBody2D
 
     public override void _Process(double delta)
     {
-        //Daha iyi zıplama kısmı
-        if (velocity.Y > 0)
-        {
-            if (ctimer > 0)
-            {
-                ctimer -= (float)delta;
-            }
-        }
         //Ateş etme bölümü
         if (playerData.canFire)
         {
@@ -163,6 +158,25 @@ public partial class Character : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
         velocity.X = Velocity.X;
+        //Daha iyi zıplama kısmı
+        if (velocity.Y > 0)
+        {
+            if (ctimer > 0)
+            {
+                ctimer -= (float)delta;
+            }
+        }
+        if (isJumping)
+        {
+            if (jTimer > 0)
+            {
+                jTimer -= (float)delta;
+            }
+            else
+            {
+                isJumping = false;
+            }
+        }
 		// Add the gravity.
 		if (!IsOnFloor() && velocity.Y < 5000)
 		{
@@ -172,6 +186,7 @@ public partial class Character : CharacterBody2D
         if (IsOnCeiling() && velocity.Y < 0)
         {
             velocity.Y = 0;
+            isJumping = false;
         }
 		if (IsOnFloor() && velocity.Y > 0)
         {
@@ -237,10 +252,19 @@ public partial class Character : CharacterBody2D
             spriteUp.Play("Jump");
             spriteDown.Play("Jump");
             AnimatedSpriteSpawn(JumpEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
+            isJumping = true;
+            jTimer = jumpTimer;
             anim.Play("Jump");
-			velocity.Y = -JumpVelocity;
             ctimer = 0;
 		}
+        if (isJumping)
+        {
+            if (Input.IsActionJustReleased("Z"))
+            {
+                isJumping = false;
+            }
+            velocity.Y = -JumpVelocity;
+        }
 		// Düşme Animasyonu
 		if (velocity.Y > 0 && !IsOnFloor())
         {
