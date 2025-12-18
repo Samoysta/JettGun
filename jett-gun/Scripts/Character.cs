@@ -254,7 +254,6 @@ public partial class Character : CharacterBody2D
             AnimatedSpriteSpawn(JumpEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
             isJumping = true;
             jTimer = jumpTimer;
-            anim.Play("Jump");
             ctimer = 0;
 		}
         if (isJumping)
@@ -276,6 +275,12 @@ public partial class Character : CharacterBody2D
             {
                 spriteDown.Play("Fall");
             }
+        }
+        //esnek Zıplama
+        if (velocity.Y <= -JumpVelocity && !IsOnFloor())
+        {
+            anim.Play("Jump");
+            anim.Seek(0);
         }
 		Velocity = velocity;
 		MoveAndSlide();
@@ -350,5 +355,6 @@ public partial class Character : CharacterBody2D
             GetParent().AddChild(Bullet);
             bullets.Add(Bullet);
         }
+
     }
 }
