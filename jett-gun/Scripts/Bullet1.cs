@@ -4,10 +4,11 @@ using System;
 public partial class Bullet1 : CharacterBody2D
 {
 	[Export] int damage = 1;
-    public bool canGo;
     public Vector2 dir;
 	[Export] float speed;
     [Export] PackedScene smokeEffect1;
+    Character character;
+    public bool isOff;
     RandomNumberGenerator rand = new RandomNumberGenerator();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -51,9 +52,17 @@ public partial class Bullet1 : CharacterBody2D
     }
     void setOff()
     {
-        Visible = false;
-        SetProcess(false);
-        SetPhysicsProcess(false);
-        canGo = true;
+        if (!isOff)
+        {
+            Visible = false;
+            character.bullets.Enqueue(this);
+            SetProcess(false);
+            SetPhysicsProcess(false);   
+            isOff = true;
+        }
+    }
+    public void Init(Character node)
+    {
+        character = node;
     }
 }

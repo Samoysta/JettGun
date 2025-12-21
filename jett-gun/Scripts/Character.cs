@@ -21,7 +21,6 @@ public partial class Character : CharacterBody2D
     bool isJumping;
     float ctimer;
 	List<Node2D> Interact = new List<Node2D>();
-    List<Bullet1> bullets = new List<Bullet1>();
 	Node2D characterSprite;
     AnimatedSprite2D spriteUp;
     AnimatedSprite2D spriteWithGun;
@@ -34,6 +33,7 @@ public partial class Character : CharacterBody2D
     Node2D foot;
     Timer gunCoolDown;
     AnimationPlayer anim;
+    public Queue<Bullet1> bullets = new();
 
     public override void _Ready()
     {
@@ -49,6 +49,16 @@ public partial class Character : CharacterBody2D
         GunDownPos = spriteWithGun.GetNode<Node2D>("GunDownPos");
         GunPos = spriteWithGun.GetNode<Node2D>("GunPos");
         anim = characterSprite.GetNode<AnimationPlayer>("AnimationPlayer");
+        for (int i = 0; i < 15; i++)
+        {
+            Bullet1 Bullet = (Bullet1)bullet1.Instantiate();  
+            Bullet.SetProcess(false);
+            Bullet.SetPhysicsProcess(false);
+            Bullet.Visible = false;
+            GetParent().CallDeferred("add_child", Bullet);
+            Bullet.Call("Init", this);
+            bullets.Enqueue(Bullet);
+        }
     }
 
     public override void _Process(double delta)
@@ -71,7 +81,7 @@ public partial class Character : CharacterBody2D
                     spriteWithGun.Play("GunUp");
                     if (gunCoolDown.IsStopped())
                     {
-                        SpawnBullet(bullet1, -90, GunUpPos.GlobalPosition + new Vector2(0,-48), new Vector2(0,-1));
+                        SpawnBullet(-90, GunUpPos.GlobalPosition + new Vector2(0,-48), new Vector2(0,-1));
                         AnimatedSpriteSpawn(fireEffect1, GunUpPos.GlobalPosition, true, new Vector2(1,1), -90);
                     }
                 }
@@ -80,7 +90,7 @@ public partial class Character : CharacterBody2D
                     spriteWithGun.Play("GunDown");
                     if (gunCoolDown.IsStopped())
                     {
-                        SpawnBullet(bullet1, 90, GunDownPos.GlobalPosition + new Vector2(0,40), new Vector2(0,1));
+                        SpawnBullet(90, GunDownPos.GlobalPosition + new Vector2(0,40), new Vector2(0,1));
                         AnimatedSpriteSpawn(fireEffect1, GunDownPos.GlobalPosition, true, new Vector2(1,1), 90);
                     }
                 }
@@ -91,11 +101,11 @@ public partial class Character : CharacterBody2D
                     {
                         if (characterSprite.Scale.Y > 0)
                         {
-                            SpawnBullet(bullet1, 0, GunPos.GlobalPosition + new Vector2(44,0), new Vector2(1,0));
+                            SpawnBullet(0, GunPos.GlobalPosition + new Vector2(44,0), new Vector2(1,0));
                         }
                         else
                         {
-                            SpawnBullet(bullet1, -180, GunPos.GlobalPosition + new Vector2(-44,0), new Vector2(-1,0));
+                            SpawnBullet(-180, GunPos.GlobalPosition + new Vector2(-44,0), new Vector2(-1,0));
                         }
                         if (characterSprite.GlobalScale.Y < 0)
                         {
@@ -322,39 +332,15 @@ public partial class Character : CharacterBody2D
             GetParent().AddChild(effect);
         }
     }
-    void SpawnBullet(PackedScene bullet, float rotation, Vector2 position, Vector2 dir)
+    void SpawnBullet(float rotation, Vector2 position, Vector2 dir)
     {
-        bool fired = false;
-        if (bullets.Count() > 0)
-        {
-            if (bullets.Count() > 0)
-            {
-                foreach (Bullet1 bul in bullets)
-                {
-                    if (bul.canGo && !fired)
-                    {
-                        bul.GlobalPosition = position;
-                        bul.GlobalRotationDegrees = rotation;
-                        bul.dir = dir;
-                        bul.Visible = true;
-                        bul.SetProcess(true);
-                        bul.SetPhysicsProcess(true);
-                        fired = true;
-                        bul.canGo = false;
-                    }
-                }
-
-            }
-        }
-        if (!fired)
-        {
-            Bullet1 Bullet = (Bullet1)bullet.Instantiate();  
-            Bullet.GlobalRotationDegrees = rotation;
-            Bullet.dir = dir;
-            Bullet.GlobalPosition = position;
-            GetParent().AddChild(Bullet);
-            bullets.Add(Bullet);
-        }
-
+        Bullet1 bul = bullets.Dequeue();
+        bul.isOff = false;
+        bul.SetProcess(true);
+        bul.SetPhysicsProcess(true);
+        bul.Visible = true;
+        bul.GlobalRotationDegrees = rotation;
+        bul.GlobalPosition = position;
+        bul.dir = dir;
     }
 }
