@@ -24,7 +24,6 @@ PlayerData="*res://Scripts/PlayerData.cs"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/size/mode=3
 window/stretch/mode="viewport"
 
 [dotnet]
@@ -73,3 +72,4 @@ X={
 
 textures/canvas_textures/default_texture_filter=0
 viewport/hdr_2d=true
+2d/snap/snap_2d_vertices_to_pixel=true

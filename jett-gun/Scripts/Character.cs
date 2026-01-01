@@ -201,6 +201,7 @@ public partial class Character : CharacterBody2D
 		if (IsOnFloor() && velocity.Y > 0)
         {
             anim.Play("Fall");
+            anim.Seek(0);
             AnimatedSpriteSpawn(FallEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
             ctimer = coyotoTimer;
             velocity.Y = 0;
@@ -259,8 +260,6 @@ public partial class Character : CharacterBody2D
 		// Jump
 		if (Input.IsActionJustPressed("Z") && ctimer > 0)
 		{
-            spriteUp.Play("Jump");
-            spriteDown.Play("Jump");
             AnimatedSpriteSpawn(JumpEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
             isJumping = true;
             jTimer = jumpTimer;
@@ -275,22 +274,40 @@ public partial class Character : CharacterBody2D
             velocity.Y = -JumpVelocity;
         }
 		// Düşme Animasyonu
-		if (velocity.Y > 0 && !IsOnFloor())
+		if (!IsOnFloor())
         {
-            if (spriteUp.Animation != "Fall")
+            if (velocity.Y > 0)
             {
-                spriteUp.Play("Fall");
+                if (spriteUp.Animation != "Fall")
+                {
+                    spriteUp.Play("Fall");
+                }
+                if (spriteDown.Animation != "Fall")
+                {
+                    spriteDown.Play("Fall");
+                }   
             }
-            if (spriteDown.Animation != "Fall")
+            if (velocity.Y <= -JumpVelocity)
             {
-                spriteDown.Play("Fall");
+                anim.Play("Jump");
+                anim.Seek(0);
             }
-        }
-        //esnek Zıplama
-        if (velocity.Y <= -JumpVelocity && !IsOnFloor())
-        {
-            anim.Play("Jump");
-            anim.Seek(0);
+            if (velocity.Y < 0)
+            {
+                if (spriteUp.Animation != "Jump")
+                {
+                    spriteUp.Play("Jump");
+                }
+                if (spriteDown.Animation != "Jump")
+                {
+                    spriteDown.Play("Jump");
+                }
+                if (velocity.Y < -JumpVelocity)
+                {
+                    spriteUp.Frame = 0;
+                    spriteDown.Frame = 0;
+                }
+            }
         }
 		Velocity = velocity;
 		MoveAndSlide();
