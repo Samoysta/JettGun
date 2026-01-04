@@ -73,7 +73,7 @@ target = NodePath("../Character")
 speed = 5.0
 
 [node name="Character" parent="Level1" instance=ExtResource("1_ebmjs")]
-position = Vector2(-431, -78)
+position = Vector2(-976, -205)
 scale = Vector2(0.6, 0.6)
 coyotoTimer = 0.07
 
