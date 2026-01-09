@@ -47,33 +47,53 @@ size = Vector2(46, 22)
 
 [sub_resource type="Animation" id="Animation_31g2e"]
 length = 0.001
-tracks/0/type = "value"
+tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sallanma/InteractSpriteOrigin:scale")
+tracks/0/path = NodePath("Sallanma/InteractSpriteOrigin:scale:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1e-05, -0.2, 0, 0.2, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sallanma/InteractSpriteOrigin:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1e-05, -0.2, 0, 0.2, 0),
+"times": PackedFloat32Array(0)
 }
 
 [sub_resource type="Animation" id="Animation_jjeqf"]
 resource_name = "Start"
 length = 0.4
-tracks/0/type = "value"
+tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sallanma/InteractSpriteOrigin:scale")
+tracks/0/path = NodePath("Sallanma/InteractSpriteOrigin:scale:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.4),
-"transitions": PackedFloat32Array(0.3186402, 1),
-"update": 0,
-"values": [Vector2(1e-05, 1e-05), Vector2(1, 1)]
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1e-05, -0.2, 0, 0.06666667, 0.1643167, 1, -0.36666667, 0.46262145, 0, 0),
+"times": PackedFloat32Array(0, 0.4)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sallanma/InteractSpriteOrigin:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(2, 0),
+"points": PackedFloat32Array(1e-05, 0, 0, 0.06666667, 0.166665, 1, -0.36666667, 0.46262145, 0, 0),
+"times": PackedFloat32Array(0, 0.4)
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_31g2e"]
