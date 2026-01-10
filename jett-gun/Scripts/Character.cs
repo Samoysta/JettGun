@@ -192,15 +192,19 @@ public partial class Character : CharacterBody2D
             dashCoolDown -= (float)delta;
         }
         //Daha iyi zıplama timer kısmı
+        if (IsOnFloor())
+        {
+            ctimer = coyotoTimer;
+            if (dashDuration > 0)
+            {
+                ctimer = 0;
+            }
+        }
         if (velocity.Y > 0)
         {
             if (ctimer > 0)
             {
                 ctimer -= (float)delta;
-            }
-            if (dashDuration > 0)
-            {
-                ctimer = 0;
             }
         }
         if (isJumping)

@@ -528,7 +528,7 @@ jumpTimer = 0.16
 coyotoTimer = 0.02
 dashSpeed = 1000.0
 dashDur = 0.24
-dashCD = 0.6
+dashCD = 0.5
 dashDust = ExtResource("6_le1tg")
 
 [node name="CharacterHitBox" type="CollisionShape2D" parent="."]
