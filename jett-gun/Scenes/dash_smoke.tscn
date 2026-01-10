@@ -1,0 +1,84 @@
+[gd_scene load_steps=13 format=3 uid="uid://bkdm5vidxfqmj"]
+
+[ext_resource type="Script" uid="uid://dttmitoqfinmk" path="res://Scripts/Effect.cs" id="1_56qtt"]
+[ext_resource type="Texture2D" uid="uid://bah1mjq5tf063" path="res://Assets/dust3.png" id="1_pdlua"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_56qtt"]
+atlas = ExtResource("1_pdlua")
+region = Rect2(0, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4bmq2"]
+atlas = ExtResource("1_pdlua")
+region = Rect2(640, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f83ea"]
+atlas = ExtResource("1_pdlua")
+region = Rect2(1280, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uj1qk"]
+atlas = ExtResource("1_pdlua")
+region = Rect2(1920, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k6wgs"]
+atlas = ExtResource("1_pdlua")
+region = Rect2(2560, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_usiu3"]
+atlas = ExtResource("1_pdlua")
+region = Rect2(3200, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q6c72"]
+atlas = ExtResource("1_pdlua")
+region = Rect2(3840, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m6ug6"]
+atlas = ExtResource("1_pdlua")
+region = Rect2(4480, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_axixu"]
+atlas = ExtResource("1_pdlua")
+region = Rect2(5120, 0, 640, 640)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_437ah"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_56qtt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4bmq2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f83ea")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uj1qk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k6wgs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_usiu3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q6c72")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m6ug6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_axixu")
+}],
+"loop": false,
+"name": &"DashEffect",
+"speed": 30.0
+}]
+
+[node name="DashSmoke" type="Node2D"]
+script = ExtResource("1_56qtt")
+timer1 = 0.5
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_437ah")
+animation = &"DashEffect"
+autoplay = "DashEffect"

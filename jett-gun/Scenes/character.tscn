@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3 uid="uid://cnynjlm0luaf3"]
+[gd_scene load_steps=70 format=3 uid="uid://cnynjlm0luaf3"]
 
 [ext_resource type="Script" uid="uid://ckm7b4ws2w6iu" path="res://Scripts/Character.cs" id="1_lkv7d"]
 [ext_resource type="PackedScene" uid="uid://b87hgego6621s" path="res://Scenes/jump_dust_effect.tscn" id="2_owm7s"]
@@ -7,9 +7,12 @@
 [ext_resource type="PackedScene" uid="uid://dcolw5p56lf2j" path="res://Scenes/fire_effect_2.tscn" id="5_kq7hj"]
 [ext_resource type="Texture2D" uid="uid://bvlrfbw2k0vya" path="res://Assets/CharacterGun.png" id="5_reotu"]
 [ext_resource type="Texture2D" uid="uid://dosuli386iqex" path="res://Assets/CharacterGunUp.png" id="6_a5ess"]
+[ext_resource type="PackedScene" uid="uid://bkdm5vidxfqmj" path="res://Scenes/dash_smoke.tscn" id="6_le1tg"]
 [ext_resource type="Texture2D" uid="uid://womcibdery6m" path="res://Assets/CharacterDown.png" id="6_reotu"]
 [ext_resource type="Texture2D" uid="uid://cvbdpeqta4jrg" path="res://Assets/CharacterGunDown.png" id="7_a5ess"]
+[ext_resource type="Texture2D" uid="uid://bkgdt3x5h7dni" path="res://Assets/characterDashUp.png" id="9_l1rcp"]
 [ext_resource type="PackedScene" uid="uid://d2q66qq1nxlqw" path="res://Scenes/bullet_1.tscn" id="9_wbia7"]
+[ext_resource type="Texture2D" uid="uid://dr3im1vmw6ko1" path="res://Assets/characterDashDown.png" id="11_le1tg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_he2x2"]
 size = Vector2(46, 52.272705)
@@ -52,6 +55,10 @@ animations = [{
 "name": &"GunUp",
 "speed": 100.0
 }]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mogsv"]
+atlas = ExtResource("9_l1rcp")
+region = Rect2(0, 0, 640, 640)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2mse5"]
 atlas = ExtResource("5_2mse5")
@@ -141,6 +148,14 @@ region = Rect2(9600, 0, 640, 640)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_mogsv")
+}],
+"loop": false,
+"name": &"Dash",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_2mse5")
 }, {
 "duration": 1.0,
@@ -222,6 +237,10 @@ animations = [{
 "name": &"Run",
 "speed": 17.0
 }]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ksrvg"]
+atlas = ExtResource("11_le1tg")
+region = Rect2(0, 0, 640, 640)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l51qt"]
 atlas = ExtResource("6_reotu")
@@ -309,6 +328,14 @@ region = Rect2(9600, 0, 640, 640)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ivxna"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ksrvg")
+}],
+"loop": false,
+"name": &"Dash",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_l51qt")
@@ -499,6 +526,10 @@ bullet1 = ExtResource("9_wbia7")
 fireEffect1 = ExtResource("5_kq7hj")
 jumpTimer = 0.16
 coyotoTimer = 0.02
+dashSpeed = 1000.0
+dashDur = 0.24
+dashCD = 0.6
+dashDust = ExtResource("6_le1tg")
 
 [node name="CharacterHitBox" type="CollisionShape2D" parent="."]
 position = Vector2(-5, 10.000004)

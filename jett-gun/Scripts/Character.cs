@@ -17,6 +17,13 @@ public partial class Character : CharacterBody2D
     [Export] PackedScene fireEffect1;
     [Export] float jumpTimer;
     [Export] float coyotoTimer;
+    [Export] float dashSpeed;
+    [Export] float dashDur;
+    [Export] float dashCD;
+    [Export] PackedScene dashDust;
+    int maxDashAmount = 1;
+    float dashDuration;
+    float dashCoolDown;
     float jTimer;
     bool isJumping;
     float ctimer;
@@ -63,10 +70,17 @@ public partial class Character : CharacterBody2D
 
     public override void _Process(double delta)
     {
+        if (IsOnFloor())
+        {
+            if (maxDashAmount == 0)
+            {
+                maxDashAmount++;
+            }
+        }
         //Ateş etme bölümü
         if (playerData.canFire)
         {
-            if (Input.IsActionPressed("X"))
+            if (Input.IsActionPressed("X") && dashDuration <= 0)
             {
                 if (spriteUp.Visible)
                 {
@@ -135,7 +149,7 @@ public partial class Character : CharacterBody2D
             }
         }
         //Interact Yapma
-        if (Input.IsActionJustPressed("Down") && IsOnFloor())
+        if (Input.IsActionJustPressed("Down") && IsOnFloor() && dashDuration <= 0)
         {
             if (Interact.Count > 0)
             {
@@ -146,7 +160,7 @@ public partial class Character : CharacterBody2D
             }
         }
         //Interact Animasyon Yapma
-		if (Interact.Count > 0 && !IsOnFloor())
+		if (Interact.Count > 0 && !IsOnFloor() && dashDuration <= 0)
         {
             if (Interact[0].GetParent().HasMethod("InteractAnimEnd") && !calledInteract1)
             {
@@ -154,7 +168,7 @@ public partial class Character : CharacterBody2D
 				calledInteract1 = true;
             }
         }
-		else if (Interact.Count > 0 && IsOnFloor())
+		else if (Interact.Count > 0 && IsOnFloor() && dashDuration <= 0)
         {
             if (Interact[0].GetParent().HasMethod("InteractAnimStart") && calledInteract1)
             {
@@ -168,12 +182,25 @@ public partial class Character : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
         velocity.X = Velocity.X;
-        //Daha iyi zıplama kısmı
+        //dash Timer kısmı
+        if (dashDuration > 0)
+        {
+            dashDuration -= (float)delta;
+        }
+        if (dashCoolDown > 0)
+        {
+            dashCoolDown -= (float)delta;
+        }
+        //Daha iyi zıplama timer kısmı
         if (velocity.Y > 0)
         {
             if (ctimer > 0)
             {
                 ctimer -= (float)delta;
+            }
+            if (dashDuration > 0)
+            {
+                ctimer = 0;
             }
         }
         if (isJumping)
@@ -186,9 +213,13 @@ public partial class Character : CharacterBody2D
             {
                 isJumping = false;
             }
+            if (dashDuration > 0)
+            {
+                isJumping = false;
+            }
         }
 		// Add the gravity.
-		if (!IsOnFloor() && velocity.Y < 5000)
+		if (!IsOnFloor() && velocity.Y < 5000 && dashDuration <= 0)
 		{
 			velocity += gravity * GetGravity() * (float)delta;
 		}
@@ -205,13 +236,18 @@ public partial class Character : CharacterBody2D
             AnimatedSpriteSpawn(FallEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
             ctimer = coyotoTimer;
             velocity.Y = 0;
+            if (Velocity.X < -Speed || Velocity.X > Speed)
+            {
+                velocity = Vector2.Zero;
+                Velocity = Vector2.Zero;
+            }
         }
 		// Movement X
-		if (Input.IsActionPressed("Right") != Input.IsActionPressed("Left"))
+		if (Input.IsActionPressed("Right") != Input.IsActionPressed("Left") && dashDuration <= 0)
         {
             if (Input.IsActionPressed("Right") && velocity.X <= Speed)
 			{
-				velocity.X = Mathf.MoveToward(velocity.X, Speed, accel * (float)delta);
+				velocity.X = Speed;
 				if (characterSprite.Scale.Y < 0)
                 {
                     characterSprite.Scale *= new Vector2(1,-1);
@@ -220,7 +256,7 @@ public partial class Character : CharacterBody2D
 			}
 			else if (Input.IsActionPressed("Left") && velocity.X >= -Speed)
 			{
-				velocity.X = Mathf.MoveToward(velocity.X, -Speed, accel * (float)delta);
+				velocity.X = -Speed;
 				if (characterSprite.Scale.Y > 0)
                 {
                     characterSprite.Scale *= new Vector2(1,-1);
@@ -241,31 +277,34 @@ public partial class Character : CharacterBody2D
         }    
 		else
         {
-            if (velocity.X >= -Speed && velocity.X <= Speed)
+            if (dashDuration <= 0)
             {
-                velocity.X = Mathf.MoveToward(velocity.X, 0, accel * (float)delta);
-            }
-			if (IsOnFloor())
-            {
-                if (spriteUp.Animation != "Idle")
+                if (velocity.X >= -Speed && velocity.X <= Speed)
                 {
-                    spriteUp.Play("Idle");
+                    velocity.X = 0;
                 }
-                if (spriteDown.Animation != "Idle")
+                if (IsOnFloor())
                 {
-                    spriteDown.Play("Idle");
-                }
+                    if (spriteUp.Animation != "Idle")
+                    {
+                        spriteUp.Play("Idle");
+                    }
+                    if (spriteDown.Animation != "Idle")
+                    {
+                        spriteDown.Play("Idle");
+                    }
+                }   
             }
         }
 		// Jump
-		if (Input.IsActionJustPressed("Z") && ctimer > 0)
+		if (Input.IsActionJustPressed("Z") && ctimer > 0 && dashDuration <= 0)
 		{
             AnimatedSpriteSpawn(JumpEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
             isJumping = true;
             jTimer = jumpTimer;
             ctimer = 0;
 		}
-        if (isJumping)
+        if (isJumping && dashDuration <= 0)
         {
             if (Input.IsActionJustReleased("Z"))
             {
@@ -274,7 +313,7 @@ public partial class Character : CharacterBody2D
             velocity.Y = -JumpVelocity;
         }
 		// Düşme Animasyonu
-		if (!IsOnFloor())
+		if (!IsOnFloor() && dashDuration <= 0)
         {
             if (velocity.Y > 0)
             {
@@ -309,7 +348,65 @@ public partial class Character : CharacterBody2D
                 }
             }
         }
-		Velocity = velocity;
+        if (Input.IsActionJustPressed("C"))
+        {
+            if (playerData.canDash && maxDashAmount > 0)
+            {
+                if (dashCoolDown <= 0)
+                {
+                    dashCoolDown = dashCD;
+                    dashDuration = dashDur;
+                    maxDashAmount--;
+                    spriteDown.Play("Dash");
+                    spriteUp.Play("Dash");
+                    anim.Play("RESET");
+                    if (characterSprite.Scale.Y < 0)
+                    {
+                        AnimatedSpriteSpawn(dashDust, GlobalPosition, false, new Vector2(1,1), 180);
+                    }
+                    else
+                    {
+                        AnimatedSpriteSpawn(dashDust, GlobalPosition, false, new Vector2(1,1), 0);
+                    }
+                    if (!spriteUp.Visible)
+                    {
+                        spriteUp.Visible = true;
+                    }
+                    if (spriteWithGun.Visible)
+                    {
+                        spriteWithGun.Visible = false;
+                    }
+                }
+            }
+        }
+        if (dashDuration > 0)
+        {
+            if (velocity.X != 0)
+            {
+                Velocity = new Vector2(velocity.X / Mathf.Abs(velocity.X) * dashSpeed, 0);
+            }
+            else
+            {
+                if (characterSprite.Scale.Y < 0)
+                {
+                    Velocity = new Vector2(-dashSpeed, 0);
+                }
+                else
+                {
+                    Velocity = new Vector2(dashSpeed, 0);
+                }
+            }
+            velocity.Y = 0;
+        }
+        else
+        {
+            if (Velocity.X < -Speed || Velocity.X > Speed)
+            {
+                velocity = Vector2.Zero;
+                Velocity = Vector2.Zero;
+            }
+            Velocity = new Vector2(Mathf.MoveToward(Velocity.X, velocity.X, accel * (float)delta), velocity.Y);   
+        }
 		MoveAndSlide();
     }
 
