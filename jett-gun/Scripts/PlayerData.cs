@@ -5,11 +5,13 @@ public partial class PlayerData : Node
 {
 	public bool canFire;
 	public bool canDash;
+	public bool hasJettPack;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
     {
         canFire = true;
 		canDash = true;
+		hasJettPack = true;
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

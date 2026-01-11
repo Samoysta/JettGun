@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://cnynjlm0luaf3"]
+[gd_scene load_steps=73 format=3 uid="uid://cnynjlm0luaf3"]
 
 [ext_resource type="Script" uid="uid://ckm7b4ws2w6iu" path="res://Scripts/Character.cs" id="1_lkv7d"]
 [ext_resource type="PackedScene" uid="uid://b87hgego6621s" path="res://Scenes/jump_dust_effect.tscn" id="2_owm7s"]
@@ -9,13 +9,18 @@
 [ext_resource type="Texture2D" uid="uid://dosuli386iqex" path="res://Assets/CharacterGunUp.png" id="6_a5ess"]
 [ext_resource type="PackedScene" uid="uid://bkdm5vidxfqmj" path="res://Scenes/dash_smoke.tscn" id="6_le1tg"]
 [ext_resource type="Texture2D" uid="uid://womcibdery6m" path="res://Assets/CharacterDown.png" id="6_reotu"]
+[ext_resource type="PackedScene" uid="uid://tfaw77wrvwcr" path="res://Scenes/dash_effect.tscn" id="7_2daya"]
 [ext_resource type="Texture2D" uid="uid://cvbdpeqta4jrg" path="res://Assets/CharacterGunDown.png" id="7_a5ess"]
+[ext_resource type="Texture2D" uid="uid://dor1a8kmcuqoy" path="res://Assets/JettPack1.png" id="8_mvyft"]
 [ext_resource type="Texture2D" uid="uid://bkgdt3x5h7dni" path="res://Assets/characterDashUp.png" id="9_l1rcp"]
 [ext_resource type="PackedScene" uid="uid://d2q66qq1nxlqw" path="res://Scenes/bullet_1.tscn" id="9_wbia7"]
 [ext_resource type="Texture2D" uid="uid://dr3im1vmw6ko1" path="res://Assets/characterDashDown.png" id="11_le1tg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_he2x2"]
 size = Vector2(46, 52.272705)
+
+[sub_resource type="Gradient" id="Gradient_mvyft"]
+colors = PackedColorArray(1.269618, 1.269618, 0, 1, 1, 0, 0, 0)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ivxna"]
 atlas = ExtResource("5_reotu")
@@ -530,6 +535,7 @@ dashSpeed = 1000.0
 dashDur = 0.24
 dashCD = 0.5
 dashDust = ExtResource("6_le1tg")
+dashEffect = ExtResource("7_2daya")
 
 [node name="CharacterHitBox" type="CollisionShape2D" parent="."]
 position = Vector2(-5, 10.000004)
@@ -545,6 +551,29 @@ position = Vector2(0, 31.818167)
 [node name="CharacterSprite" type="Node2D" parent="CharacterHitBox/Sprite/Sprite2"]
 position = Vector2(1.1920929e-07, -25.568172)
 scale = Vector2(1.48, 0.85)
+
+[node name="JettPack" type="Sprite2D" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite"]
+visible = false
+self_modulate = Color(0, 0, 0, 1)
+position = Vector2(-10.135135, -10.695183)
+scale = Vector2(0.98986477, 0.97927755)
+texture = ExtResource("8_mvyft")
+
+[node name="JettPackParticles" type="CPUParticles2D" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite/JettPack"]
+modulate = Color(1.6372112, 1.6372112, 1.6372112, 1)
+position = Vector2(-2.047782, 14.334474)
+amount = 60
+lifetime = 0.4
+emission_shape = 3
+emission_rect_extents = Vector2(6.055, 3.55)
+direction = Vector2(0, 1)
+spread = 19.65
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 250.0
+scale_amount_min = 6.0
+scale_amount_max = 6.0
+color_ramp = SubResource("Gradient_mvyft")
 
 [node name="Foot" type="Node2D" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite"]
 position = Vector2(-8.054681e-08, 37.43314)
@@ -590,6 +619,10 @@ shape = SubResource("CircleShape2D_ushfy")
 
 [node name="GunCoolDown" type="Timer" parent="."]
 wait_time = 0.15
+one_shot = true
+
+[node name="DashEffectCD" type="Timer" parent="."]
+wait_time = 0.05
 one_shot = true
 
 [connection signal="body_entered" from="InteractHitBox" to="." method="InteractEntered"]

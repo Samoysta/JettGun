@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://tfaw77wrvwcr"]
+
+[ext_resource type="Script" uid="uid://dttmitoqfinmk" path="res://Scripts/Effect.cs" id="1_id2q2"]
+[ext_resource type="Texture2D" uid="uid://dr3im1vmw6ko1" path="res://Assets/characterDashDown.png" id="2_0sory"]
+[ext_resource type="Texture2D" uid="uid://bkgdt3x5h7dni" path="res://Assets/characterDashUp.png" id="3_yuggj"]
+
+[sub_resource type="Animation" id="Animation_1qwxs"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.4117647)]
+}
+
+[sub_resource type="Animation" id="Animation_pkym6"]
+resource_name = "Start"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.43333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.4117647), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cp8ia"]
+_data = {
+&"RESET": SubResource("Animation_1qwxs"),
+&"Start": SubResource("Animation_pkym6")
+}
+
+[node name="DashEffect" type="Node2D"]
+modulate = Color(1, 1, 1, 0.4117647)
+script = ExtResource("1_id2q2")
+timer1 = 1.0
+
+[node name="Sprite" type="Node2D" parent="."]
+
+[node name="Down" type="Sprite2D" parent="Sprite"]
+texture = ExtResource("2_0sory")
+
+[node name="Up" type="Sprite2D" parent="Sprite"]
+texture = ExtResource("3_yuggj")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_cp8ia")
+}
+autoplay = "Start"

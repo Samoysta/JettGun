@@ -21,6 +21,7 @@ public partial class Character : CharacterBody2D
     [Export] float dashDur;
     [Export] float dashCD;
     [Export] PackedScene dashDust;
+    [Export] PackedScene dashEffect;
     int maxDashAmount = 1;
     float dashDuration;
     float dashCoolDown;
@@ -39,7 +40,11 @@ public partial class Character : CharacterBody2D
 	Vector2 velocity;
     Node2D foot;
     Timer gunCoolDown;
+    Timer dashEffectCD;
     AnimationPlayer anim;
+    Sprite2D JettPack;
+    CpuParticles2D jettPackEffect;
+    bool canJett;
     public Queue<Bullet1> bullets = new();
 
     public override void _Ready()
@@ -52,8 +57,11 @@ public partial class Character : CharacterBody2D
         spriteDown = characterSprite.GetNode<AnimatedSprite2D>("Down");
         gunCoolDown = GetNode<Timer>("GunCoolDown");
         spriteWithGun = characterSprite.GetNode<AnimatedSprite2D>("Gun");
+        dashEffectCD = GetNode<Timer>("DashEffectCD");
         GunUpPos = spriteWithGun.GetNode<Node2D>("GunUpPos");
         GunDownPos = spriteWithGun.GetNode<Node2D>("GunDownPos");
+        JettPack = characterSprite.GetNode<Sprite2D>("JettPack");
+        JettPack.Visible = false;
         GunPos = spriteWithGun.GetNode<Node2D>("GunPos");
         anim = characterSprite.GetNode<AnimationPlayer>("AnimationPlayer");
         for (int i = 0; i < 15; i++)
@@ -66,10 +74,28 @@ public partial class Character : CharacterBody2D
             Bullet.Call("Init", this);
             bullets.Enqueue(Bullet);
         }
+        if (playerData.hasJettPack) JettPack.Visible = true; 
+        jettPackEffect = JettPack.GetNode<CpuParticles2D>("JettPackParticles");
     }
 
     public override void _Process(double delta)
     {
+        //DashEffect Bölümü
+        if (dashDuration > 0)
+        {
+            if (dashEffectCD.IsStopped())
+            {
+                dashEffectCD.Start();
+                if (characterSprite.Scale.Y > 0)
+                {
+                    AnimatedSpriteSpawn(dashEffect, characterSprite.GlobalPosition, false, new Vector2(1,1), characterSprite.GlobalRotationDegrees);
+                }
+                else
+                {
+                    AnimatedSpriteSpawn(dashEffect, characterSprite.GlobalPosition, false, new Vector2(1,-1), characterSprite.GlobalRotationDegrees);
+                }
+            }
+        }
         if (IsOnFloor())
         {
             if (maxDashAmount == 0)
@@ -182,9 +208,34 @@ public partial class Character : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
         velocity.X = Velocity.X;
+        //JettPack kısmı
+        if (ctimer <= 0 && !isJumping)
+        {
+            if (Input.IsActionPressed("Z") && playerData.hasJettPack && canJett && dashDuration <= 0)
+            {
+                if (!jettPackEffect.Emitting) jettPackEffect.Emitting = true;
+                spriteDown.Frame = 0;
+                spriteUp.Frame = 0;
+                velocity.Y += -10000 * (float)delta;
+                velocity.Y = Mathf.Clamp(velocity.Y, -800, 1400);
+            }
+            else
+            {
+                if (jettPackEffect.Emitting) jettPackEffect.Emitting = false;
+            }
+        }
+        else
+        {
+            if (jettPackEffect.Emitting) jettPackEffect.Emitting = false;
+        }
         //dash Timer kısmı
         if (dashDuration > 0)
         {
+            if (canJett) canJett = false;
+            if (!Input.IsActionPressed("Z"))
+            {
+                canJett = true;
+            }
             dashDuration -= (float)delta;
         }
         if (dashCoolDown > 0)
@@ -223,7 +274,7 @@ public partial class Character : CharacterBody2D
             }
         }
 		// Add the gravity.
-		if (!IsOnFloor() && velocity.Y < 5000 && dashDuration <= 0)
+		if (!IsOnFloor() && velocity.Y < 1400 && dashDuration <= 0)
 		{
 			velocity += gravity * GetGravity() * (float)delta;
 		}
@@ -235,6 +286,7 @@ public partial class Character : CharacterBody2D
         }
 		if (IsOnFloor() && velocity.Y > 0)
         {
+            canJett = false;
             anim.Play("Fall");
             anim.Seek(0);
             AnimatedSpriteSpawn(FallEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
@@ -305,9 +357,17 @@ public partial class Character : CharacterBody2D
 		{
             AnimatedSpriteSpawn(JumpEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
             isJumping = true;
+            canJett = false;
             jTimer = jumpTimer;
             ctimer = 0;
 		}
+        if (Input.IsActionJustReleased("Z") && !IsOnFloor())
+        {
+            if (!canJett)
+            {
+                canJett = true;
+            }
+        }
         if (isJumping && dashDuration <= 0)
         {
             if (Input.IsActionJustReleased("Z"))
