@@ -1,4 +1,4 @@
-[gd_scene load_steps=73 format=3 uid="uid://cnynjlm0luaf3"]
+[gd_scene load_steps=76 format=3 uid="uid://cnynjlm0luaf3"]
 
 [ext_resource type="Script" uid="uid://ckm7b4ws2w6iu" path="res://Scripts/Character.cs" id="1_lkv7d"]
 [ext_resource type="PackedScene" uid="uid://b87hgego6621s" path="res://Scenes/jump_dust_effect.tscn" id="2_owm7s"]
@@ -15,6 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://bkgdt3x5h7dni" path="res://Assets/characterDashUp.png" id="9_l1rcp"]
 [ext_resource type="PackedScene" uid="uid://d2q66qq1nxlqw" path="res://Scenes/bullet_1.tscn" id="9_wbia7"]
 [ext_resource type="Texture2D" uid="uid://dr3im1vmw6ko1" path="res://Assets/characterDashDown.png" id="11_le1tg"]
+[ext_resource type="Texture2D" uid="uid://c5bqkrp8prmf" path="res://Assets/UI/Stamina/staminaBG.png" id="16_w85my"]
+[ext_resource type="Texture2D" uid="uid://cdssdexf5bhf" path="res://Assets/UI/Stamina/staminaProcess.png" id="17_et0tf"]
+[ext_resource type="Texture2D" uid="uid://nercr07g78v3" path="res://Assets/UI/Stamina/staminaOutline.png" id="18_hgna0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_he2x2"]
 size = Vector2(46, 52.272705)
@@ -518,7 +521,7 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_ushfy"]
 radius = 77.88453
 
-[node name="Character" type="CharacterBody2D"]
+[node name="Character" type="CharacterBody2D" node_paths=PackedStringArray("staminaBar")]
 collision_layer = 2
 script = ExtResource("1_lkv7d")
 Speed = 500.0
@@ -536,6 +539,8 @@ dashDur = 0.24
 dashCD = 0.5
 dashDust = ExtResource("6_le1tg")
 dashEffect = ExtResource("7_2daya")
+staminaBar = NodePath("UI/Stamina/Polygon2D/Progress")
+stamina = 100.0
 
 [node name="CharacterHitBox" type="CollisionShape2D" parent="."]
 position = Vector2(-5, 10.000004)
@@ -560,7 +565,7 @@ scale = Vector2(0.98986477, 0.97927755)
 texture = ExtResource("8_mvyft")
 
 [node name="JettPackParticles" type="CPUParticles2D" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite/JettPack"]
-modulate = Color(1.6372112, 1.6372112, 1.6372112, 1)
+modulate = Color(1.7602391, 1.7602391, 1.7602391, 1)
 position = Vector2(-2.047782, 14.334474)
 amount = 60
 lifetime = 0.4
@@ -624,6 +629,28 @@ one_shot = true
 [node name="DashEffectCD" type="Timer" parent="."]
 wait_time = 0.05
 one_shot = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Stamina" type="Node2D" parent="UI"]
+modulate = Color(1.1638972, 1.1638972, 1.1638972, 1)
+position = Vector2(412, 122)
+
+[node name="BG" type="Sprite2D" parent="UI/Stamina"]
+texture = ExtResource("16_w85my")
+
+[node name="Polygon2D" type="Polygon2D" parent="UI/Stamina"]
+clip_children = 1
+polygon = PackedVector2Array(-302, -13, -317, 2, 302, 3, 317, -12)
+
+[node name="Progress" type="Sprite2D" parent="UI/Stamina/Polygon2D"]
+texture = ExtResource("17_et0tf")
+
+[node name="Out" type="Sprite2D" parent="UI/Stamina/Polygon2D/Progress"]
+texture = ExtResource("18_hgna0")
+
+[node name="Outline" type="Sprite2D" parent="UI/Stamina"]
+texture = ExtResource("18_hgna0")
 
 [connection signal="body_entered" from="InteractHitBox" to="." method="InteractEntered"]
 [connection signal="body_exited" from="InteractHitBox" to="." method="InteractExited"]

@@ -22,6 +22,9 @@ public partial class Character : CharacterBody2D
     [Export] float dashCD;
     [Export] PackedScene dashDust;
     [Export] PackedScene dashEffect;
+    [Export] Node2D staminaBar;
+    [Export] float stamina;
+    float currentStamina;
     int maxDashAmount = 1;
     float dashDuration;
     float dashCoolDown;
@@ -49,6 +52,7 @@ public partial class Character : CharacterBody2D
 
     public override void _Ready()
     {
+        currentStamina = stamina;
         ctimer = coyotoTimer;
         playerData = GetNode<PlayerData>("/root/PlayerData");
         characterSprite = GetNode<Node2D>("CharacterHitBox/Sprite/Sprite2/CharacterSprite");
@@ -80,6 +84,16 @@ public partial class Character : CharacterBody2D
 
     public override void _Process(double delta)
     {
+        //StaminaBar
+        Vector2 targetPos = new Vector2((616 / stamina * currentStamina) - 616, 0);
+        if (staminaBar.Position >= targetPos)
+        {
+            staminaBar.Position = targetPos;
+        }
+        else
+        {
+            staminaBar.Position = staminaBar.Position.Lerp(targetPos, 5 * (float)delta);   
+        }
         //DashEffect Bölümü
         if (dashDuration > 0)
         {
@@ -208,15 +222,56 @@ public partial class Character : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
         velocity.X = Velocity.X;
+        // Düşme Animasyonu
+		if (!IsOnFloor() && dashDuration <= 0)
+        {
+            if (velocity.Y > 0)
+            {
+                if (spriteUp.Animation != "Fall")
+                {
+                    spriteUp.Play("Fall");
+                }
+                if (spriteDown.Animation != "Fall")
+                {
+                    spriteDown.Play("Fall");
+                }   
+            }
+            if (Velocity.Y <= -JumpVelocity)
+            {
+                anim.Play("Jump");
+                anim.Seek(0);
+            }
+            if (Velocity.Y < 0)
+            {
+                if (spriteUp.Animation != "Jump")
+                {
+                    spriteUp.Play("Jump");
+                }
+                if (spriteDown.Animation != "Jump")
+                {
+                    spriteDown.Play("Jump");
+                }
+                if (Velocity.Y < -JumpVelocity)
+                {
+                    spriteUp.Frame = 0;
+                    spriteDown.Frame = 0;
+                }
+                
+            }
+        }
         //JettPack kısmı
         if (ctimer <= 0 && !isJumping)
         {
-            if (Input.IsActionPressed("Z") && playerData.hasJettPack && canJett && dashDuration <= 0)
+            if (Input.IsActionPressed("Z") && playerData.hasJettPack && canJett && dashDuration <= 0 && currentStamina > 0)
             {
                 if (!jettPackEffect.Emitting) jettPackEffect.Emitting = true;
-                spriteDown.Frame = 0;
-                spriteUp.Frame = 0;
+                if (Velocity.Y != 0)
+                {
+                    spriteDown.Frame = 0;
+                    spriteUp.Frame = 0;    
+                }
                 velocity.Y += -10000 * (float)delta;
+                currentStamina -= 50 * (float)delta;
                 velocity.Y = Mathf.Clamp(velocity.Y, -800, 1400);
             }
             else
@@ -246,10 +301,10 @@ public partial class Character : CharacterBody2D
         if (IsOnFloor())
         {
             ctimer = coyotoTimer;
-            if (dashDuration > 0)
-            {
-                ctimer = 0;
-            }
+        }
+        if (dashDuration > 0)
+        {
+            ctimer = 0;
         }
         if (velocity.Y > 0)
         {
@@ -284,8 +339,10 @@ public partial class Character : CharacterBody2D
             velocity.Y = 0;
             isJumping = false;
         }
+        //Yere Çarpma
 		if (IsOnFloor() && velocity.Y > 0)
         {
+            currentStamina = stamina;
             canJett = false;
             anim.Play("Fall");
             anim.Seek(0);
@@ -361,7 +418,7 @@ public partial class Character : CharacterBody2D
             jTimer = jumpTimer;
             ctimer = 0;
 		}
-        if (Input.IsActionJustReleased("Z") && !IsOnFloor())
+        if (!Input.IsActionPressed("Z") && !IsOnFloor())
         {
             if (!canJett)
             {
@@ -375,42 +432,6 @@ public partial class Character : CharacterBody2D
                 isJumping = false;
             }
             velocity.Y = -JumpVelocity;
-        }
-		// Düşme Animasyonu
-		if (!IsOnFloor() && dashDuration <= 0)
-        {
-            if (velocity.Y > 0)
-            {
-                if (spriteUp.Animation != "Fall")
-                {
-                    spriteUp.Play("Fall");
-                }
-                if (spriteDown.Animation != "Fall")
-                {
-                    spriteDown.Play("Fall");
-                }   
-            }
-            if (velocity.Y <= -JumpVelocity)
-            {
-                anim.Play("Jump");
-                anim.Seek(0);
-            }
-            if (velocity.Y < 0)
-            {
-                if (spriteUp.Animation != "Jump")
-                {
-                    spriteUp.Play("Jump");
-                }
-                if (spriteDown.Animation != "Jump")
-                {
-                    spriteDown.Play("Jump");
-                }
-                if (velocity.Y < -JumpVelocity)
-                {
-                    spriteUp.Frame = 0;
-                    spriteDown.Frame = 0;
-                }
-            }
         }
         if (Input.IsActionJustPressed("C"))
         {
@@ -472,6 +493,7 @@ public partial class Character : CharacterBody2D
             Velocity = new Vector2(Mathf.MoveToward(Velocity.X, velocity.X, accel * (float)delta), velocity.Y);   
         }
 		MoveAndSlide();
+        
     }
 
 	public void InteractEntered(Node2D body)
