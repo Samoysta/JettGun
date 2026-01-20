@@ -60,10 +60,10 @@ animations = [{
 "speed": 30.0
 }]
 
-[node name="FallDustEffect" type="Node2D"]
+[node name="FallDustEffect" type="Node2D" node_paths=PackedStringArray("sprite") groups=["Fall"]]
 script = ExtResource("1_q1a80")
 timer1 = 0.25
+sprite = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_kejxy")
-autoplay = "default"

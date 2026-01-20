@@ -74,11 +74,11 @@ animations = [{
 "speed": 30.0
 }]
 
-[node name="DashSmoke" type="Node2D"]
+[node name="DashSmoke" type="Node2D" node_paths=PackedStringArray("sprite") groups=["Dash"]]
 script = ExtResource("1_56qtt")
 timer1 = 0.5
+sprite = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_437ah")
 animation = &"DashEffect"
-autoplay = "DashEffect"

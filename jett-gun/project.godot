@@ -37,6 +37,11 @@ project/assembly_name="JettGun"
 
 Interactable=""
 Ground=""
+Jump=""
+Fall=""
+Dash=""
+Halo=""
+Fire=""
 
 [input]
 

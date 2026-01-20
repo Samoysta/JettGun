@@ -53,13 +53,13 @@ animations = [{
 "speed": 40.0
 }]
 
-[node name="JumpDustEffect" type="Node2D"]
+[node name="JumpDustEffect" type="Node2D" node_paths=PackedStringArray("sprite") groups=["Jump"]]
 script = ExtResource("1_4gu6q")
 timer1 = 0.2
+sprite = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_px5th")
 animation = &"Start"
-autoplay = "Start"
 frame = 5
 frame_progress = 1.0

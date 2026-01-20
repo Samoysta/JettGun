@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=3 uid="uid://cnynjlm0luaf3"]
+[gd_scene load_steps=79 format=3 uid="uid://cnynjlm0luaf3"]
 
 [ext_resource type="Script" uid="uid://ckm7b4ws2w6iu" path="res://Scripts/Character.cs" id="1_lkv7d"]
 [ext_resource type="PackedScene" uid="uid://b87hgego6621s" path="res://Scenes/jump_dust_effect.tscn" id="2_owm7s"]
@@ -18,6 +18,8 @@
 [ext_resource type="Texture2D" uid="uid://c5bqkrp8prmf" path="res://Assets/UI/Stamina/staminaBG.png" id="16_w85my"]
 [ext_resource type="Texture2D" uid="uid://cdssdexf5bhf" path="res://Assets/UI/Stamina/staminaProcess.png" id="17_et0tf"]
 [ext_resource type="Texture2D" uid="uid://nercr07g78v3" path="res://Assets/UI/Stamina/staminaOutline.png" id="18_hgna0"]
+[ext_resource type="Texture2D" uid="uid://dqid4lmwct3ol" path="res://Assets/UI/Stamina/particle.png" id="19_et0tf"]
+[ext_resource type="Texture2D" uid="uid://0e7mo0cg08ph" path="res://Assets/UI/Stamina/Ban.png" id="20_hgna0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_he2x2"]
 size = Vector2(46, 52.272705)
@@ -521,7 +523,11 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_ushfy"]
 radius = 77.88453
 
-[node name="Character" type="CharacterBody2D" node_paths=PackedStringArray("staminaBar")]
+[sub_resource type="Curve" id="Curve_w85my"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.4933333, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="Character" type="CharacterBody2D" node_paths=PackedStringArray("staminaBar", "staminaEffect1")]
 collision_layer = 2
 script = ExtResource("1_lkv7d")
 Speed = 500.0
@@ -540,6 +546,7 @@ dashCD = 0.5
 dashDust = ExtResource("6_le1tg")
 dashEffect = ExtResource("7_2daya")
 staminaBar = NodePath("UI/Stamina/Polygon2D/Progress")
+staminaEffect1 = NodePath("UI/Stamina/Polygon2D/Progress/Right")
 stamina = 100.0
 
 [node name="CharacterHitBox" type="CollisionShape2D" parent="."]
@@ -571,6 +578,7 @@ amount = 60
 lifetime = 0.4
 emission_shape = 3
 emission_rect_extents = Vector2(6.055, 3.55)
+particle_flag_align_y = true
 direction = Vector2(0, 1)
 spread = 19.65
 gravity = Vector2(0, 0)
@@ -579,6 +587,11 @@ initial_velocity_max = 250.0
 scale_amount_min = 6.0
 scale_amount_max = 6.0
 color_ramp = SubResource("Gradient_mvyft")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite/JettPack"]
+visible = false
+position = Vector2(11.604097, 3.41297)
+texture = ExtResource("20_hgna0")
 
 [node name="Foot" type="Node2D" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite"]
 position = Vector2(-8.054681e-08, 37.43314)
@@ -648,6 +661,22 @@ texture = ExtResource("17_et0tf")
 
 [node name="Out" type="Sprite2D" parent="UI/Stamina/Polygon2D/Progress"]
 texture = ExtResource("18_hgna0")
+
+[node name="Right" type="CPUParticles2D" parent="UI/Stamina/Polygon2D/Progress"]
+z_index = 1
+position = Vector2(309, -5)
+emitting = false
+amount = 20
+texture = ExtResource("19_et0tf")
+lifetime = 0.3
+particle_flag_align_y = true
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 154.47
+initial_velocity_max = 154.47
+scale_amount_min = 1.5
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_w85my")
 
 [node name="Outline" type="Sprite2D" parent="UI/Stamina"]
 texture = ExtResource("18_hgna0")

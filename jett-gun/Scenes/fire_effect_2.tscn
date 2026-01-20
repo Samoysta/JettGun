@@ -46,11 +46,11 @@ animations = [{
 "speed": 40.0
 }]
 
-[node name="FireEffect2" type="Node2D"]
+[node name="FireEffect2" type="Node2D" node_paths=PackedStringArray("sprite") groups=["Fire"]]
 script = ExtResource("1_rui8g")
 timer1 = 0.4
+sprite = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(10, 2)
 sprite_frames = SubResource("SpriteFrames_75ms6")
-autoplay = "default"

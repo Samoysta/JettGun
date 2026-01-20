@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
@@ -22,7 +23,8 @@ public partial class Character : CharacterBody2D
     [Export] float dashCD;
     [Export] PackedScene dashDust;
     [Export] PackedScene dashEffect;
-    [Export] Node2D staminaBar;
+    [Export] Sprite2D staminaBar;
+    [Export] CpuParticles2D staminaEffect1;
     [Export] float stamina;
     float currentStamina;
     int maxDashAmount = 1;
@@ -49,9 +51,14 @@ public partial class Character : CharacterBody2D
     CpuParticles2D jettPackEffect;
     bool canJett;
     public Queue<Bullet1> bullets = new();
-
+    public Queue<Effect> jumpEffects = new();
+    public Queue<Effect> fallEffects = new();
+    public Queue<Effect> fireEffects = new();
+    public Queue<Effect> dashEffects = new();
+    public Queue<Effect> haloEffects = new();
     public override void _Ready()
     {
+        staminaEffect1.Emitting = false;
         currentStamina = stamina;
         ctimer = coyotoTimer;
         playerData = GetNode<PlayerData>("/root/PlayerData");
@@ -68,16 +75,6 @@ public partial class Character : CharacterBody2D
         JettPack.Visible = false;
         GunPos = spriteWithGun.GetNode<Node2D>("GunPos");
         anim = characterSprite.GetNode<AnimationPlayer>("AnimationPlayer");
-        for (int i = 0; i < 15; i++)
-        {
-            Bullet1 Bullet = (Bullet1)bullet1.Instantiate();  
-            Bullet.SetProcess(false);
-            Bullet.SetPhysicsProcess(false);
-            Bullet.Visible = false;
-            GetParent().CallDeferred("add_child", Bullet);
-            Bullet.Call("Init", this);
-            bullets.Enqueue(Bullet);
-        }
         if (playerData.hasJettPack) JettPack.Visible = true; 
         jettPackEffect = JettPack.GetNode<CpuParticles2D>("JettPackParticles");
     }
@@ -86,13 +83,35 @@ public partial class Character : CharacterBody2D
     {
         //StaminaBar
         Vector2 targetPos = new Vector2((616 / stamina * currentStamina) - 616, 0);
+        if (staminaBar.Position > targetPos)
+        {
+            if (!staminaEffect1.Emitting)
+            {
+                staminaEffect1.Emitting = true;
+            }
+        }
+        else
+        {
+            if (staminaEffect1.Emitting)
+            {
+                staminaEffect1.Emitting = false;
+            }
+        }
+        if (Mathf.Abs(staminaBar.Position.X - targetPos.X) < 100)
+        {
+            staminaBar.SelfModulate = staminaBar.SelfModulate.Lerp(new Color(1,1,1,1), 5 * (float)delta);
+        }
         if (staminaBar.Position >= targetPos)
         {
             staminaBar.Position = targetPos;
         }
         else
         {
-            staminaBar.Position = staminaBar.Position.Lerp(targetPos, 5 * (float)delta);   
+            if (Mathf.Abs(staminaBar.Position.X - targetPos.X) > 100)
+            {
+                staminaBar.SelfModulate = staminaBar.SelfModulate.Lerp(new Color(0,1,0,1), 5 * (float)delta);
+            }
+            staminaBar.Position = staminaBar.Position.Lerp(targetPos, 5 * (float)delta);  
         }
         //DashEffect Bölümü
         if (dashDuration > 0)
@@ -102,11 +121,11 @@ public partial class Character : CharacterBody2D
                 dashEffectCD.Start();
                 if (characterSprite.Scale.Y > 0)
                 {
-                    AnimatedSpriteSpawn(dashEffect, characterSprite.GlobalPosition, false, new Vector2(1,1), characterSprite.GlobalRotationDegrees);
+                    AnimatedSpriteSpawn(dashEffect, characterSprite.GlobalPosition, new Vector2(1,1), characterSprite.GlobalRotationDegrees, "Halo");
                 }
                 else
                 {
-                    AnimatedSpriteSpawn(dashEffect, characterSprite.GlobalPosition, false, new Vector2(1,-1), characterSprite.GlobalRotationDegrees);
+                    AnimatedSpriteSpawn(dashEffect, characterSprite.GlobalPosition, new Vector2(1,-1), characterSprite.GlobalRotationDegrees, "Halo");
                 }
             }
         }
@@ -136,7 +155,7 @@ public partial class Character : CharacterBody2D
                     if (gunCoolDown.IsStopped())
                     {
                         SpawnBullet(-90, GunUpPos.GlobalPosition + new Vector2(0,-48), new Vector2(0,-1));
-                        AnimatedSpriteSpawn(fireEffect1, GunUpPos.GlobalPosition, true, new Vector2(1,1), -90);
+                        AnimatedSpriteSpawn(fireEffect1, GunUpPos.GlobalPosition, new Vector2(1,1), -90, "Fire");
                     }
                 }
                 else if (Input.IsActionPressed("Down") && !IsOnFloor())
@@ -145,7 +164,7 @@ public partial class Character : CharacterBody2D
                     if (gunCoolDown.IsStopped())
                     {
                         SpawnBullet(90, GunDownPos.GlobalPosition + new Vector2(0,40), new Vector2(0,1));
-                        AnimatedSpriteSpawn(fireEffect1, GunDownPos.GlobalPosition, true, new Vector2(1,1), 90);
+                        AnimatedSpriteSpawn(fireEffect1, GunDownPos.GlobalPosition, new Vector2(1,1), 90, "Fire");
                     }
                 }
                 else
@@ -163,11 +182,11 @@ public partial class Character : CharacterBody2D
                         }
                         if (characterSprite.GlobalScale.Y < 0)
                         {
-                            AnimatedSpriteSpawn(fireEffect1, GunPos.GlobalPosition, true, new Vector2(1,-1), 180);   
+                            AnimatedSpriteSpawn(fireEffect1, GunPos.GlobalPosition, new Vector2(1,-1), 180, "Fire");   
                         }
                         else
                         {
-                            AnimatedSpriteSpawn(fireEffect1, GunPos.GlobalPosition, true, new Vector2(1,1), 0);
+                            AnimatedSpriteSpawn(fireEffect1, GunPos.GlobalPosition,  new Vector2(1,1), 0, "Fire");
                         }
                     }
                 }
@@ -334,19 +353,21 @@ public partial class Character : CharacterBody2D
 			velocity += gravity * GetGravity() * (float)delta;
 		}
 		// Tavana  ve Yere Çarpınca Y eksenindeki hızı sıfırlama
+        // TAVAN ÇARPMA
         if (IsOnCeiling() && velocity.Y < 0)
         {
             velocity.Y = 0;
+            canJett = false;
             isJumping = false;
         }
-        //Yere Çarpma
+        // YERE ÇARPMA
 		if (IsOnFloor() && velocity.Y > 0)
         {
             currentStamina = stamina;
             canJett = false;
             anim.Play("Fall");
             anim.Seek(0);
-            AnimatedSpriteSpawn(FallEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
+            AnimatedSpriteSpawn(FallEffect,foot.GlobalPosition,new Vector2(1,1), 0, "Fall");
             ctimer = coyotoTimer;
             velocity.Y = 0;
             if (Velocity.X < -Speed || Velocity.X > Speed)
@@ -412,7 +433,7 @@ public partial class Character : CharacterBody2D
 		// Jump
 		if (Input.IsActionJustPressed("Z") && ctimer > 0 && dashDuration <= 0)
 		{
-            AnimatedSpriteSpawn(JumpEffect,foot.GlobalPosition, false, new Vector2(1,1), 0);
+            AnimatedSpriteSpawn(JumpEffect,foot.GlobalPosition, new Vector2(1,1), 0, "Jump");
             isJumping = true;
             canJett = false;
             jTimer = jumpTimer;
@@ -447,11 +468,11 @@ public partial class Character : CharacterBody2D
                     anim.Play("RESET");
                     if (characterSprite.Scale.Y < 0)
                     {
-                        AnimatedSpriteSpawn(dashDust, GlobalPosition, false, new Vector2(1,1), 180);
+                        AnimatedSpriteSpawn(dashDust, GlobalPosition, new Vector2(1,1), 180, "Dash");
                     }
                     else
                     {
-                        AnimatedSpriteSpawn(dashDust, GlobalPosition, false, new Vector2(1,1), 0);
+                        AnimatedSpriteSpawn(dashDust, GlobalPosition, new Vector2(1,1), 0, "Dash");
                     }
                     if (!spriteUp.Visible)
                     {
@@ -516,24 +537,105 @@ public partial class Character : CharacterBody2D
             }
         }
     }
-    void AnimatedSpriteSpawn(PackedScene node,Vector2 pos, bool AddChild, Vector2 scale, float rot)
+    void AnimatedSpriteSpawn(PackedScene node,Vector2 pos,Vector2 scale, float rot, string which)
     {
-        Node2D effect = (Node2D)node.Instantiate();
-        effect.GlobalPosition = pos;
-        effect.GlobalScale *= scale;
-        effect.GlobalRotationDegrees = rot;
-        if (AddChild)
+        if (which == "Jump")
         {
-            GetParent().AddChild(effect);
-            effect.Reparent(this);
+            if (jumpEffects.Count == 0)
+            {
+                Effect effect = (Effect)node.Instantiate();
+                effect.Call("Init", this);
+                effect.Call("setOff");
+                GetTree().CurrentScene.AddChild(effect);
+            }
+            Effect Effect = jumpEffects.Dequeue();
+            Effect.Call("Play");
+            Effect.Visible = true;
+            Effect.isOff = false;
+            Effect.GlobalPosition = pos;
+            Effect.GlobalScale *= scale;
+            Effect.GlobalRotationDegrees = rot;
+            
         }
-        else
+        else if (which == "Fall")
         {
-            GetParent().AddChild(effect);
+            if (fallEffects.Count == 0)
+            {
+                Effect effect = (Effect)node.Instantiate();
+                effect.Call("Init", this);
+                effect.Call("setOff");
+                GetTree().CurrentScene.AddChild(effect);
+            }
+            Effect Effect = fallEffects.Dequeue();
+            Effect.Call("Play");
+            Effect.Visible = true;
+            Effect.isOff = false;
+            Effect.GlobalPosition = pos;
+            Effect.GlobalScale *= scale;
+            Effect.GlobalRotationDegrees = rot;
+        }
+        else if (which == "Fire")
+        {
+            if (fireEffects.Count == 0)
+            {
+                Effect effect = (Effect)node.Instantiate();
+                effect.Call("Init", this);
+                effect.Call("setOff");
+                GetTree().CurrentScene.AddChild(effect);
+                effect.Reparent(this);
+            }
+            Effect Effect = fireEffects.Dequeue();
+            Effect.Call("Play");
+            Effect.Visible = true;
+            Effect.isOff = false;
+            Effect.GlobalPosition = pos;
+            Effect.GlobalScale *= scale;
+            Effect.GlobalRotationDegrees = rot;
+        }
+        else if (which == "Halo")
+        {
+            if (haloEffects.Count == 0)
+            {
+                Effect effect = (Effect)node.Instantiate();
+                effect.Call("Init", this);
+                effect.Call("setOff");
+                GetTree().CurrentScene.AddChild(effect);
+            }
+            Effect Effect = haloEffects.Dequeue();
+            Effect.Call("Play");
+            Effect.isOff = false;
+            Effect.Visible = true;
+            Effect.GlobalPosition = pos;
+            Effect.GlobalScale *= scale;
+            Effect.GlobalRotationDegrees = rot;
+        }
+        else if (which == "Dash")
+        {
+             if (dashEffects.Count == 0)
+            {
+                Effect effect = (Effect)node.Instantiate();
+                effect.Call("Init", this);
+                effect.Call("setOff");
+                GetTree().CurrentScene.AddChild(effect);
+            }
+            Effect Effect = dashEffects.Dequeue();
+            Effect.Call("Play");
+            Effect.isOff = false;
+            Effect.Visible = true;
+            Effect.GlobalPosition = pos;
+            Effect.GlobalScale *= scale;
+            Effect.GlobalRotationDegrees = rot;
         }
     }
     void SpawnBullet(float rotation, Vector2 position, Vector2 dir)
     {
+        if (bullets.Count == 0)
+        {
+            Bullet1 Bullet = (Bullet1)bullet1.Instantiate();
+            Bullet.Call("Init", this);
+            Bullet.Call("setOff");
+            GetTree().CurrentScene.AddChild(Bullet);
+        }
         Bullet1 bul = bullets.Dequeue();
         bul.isOff = false;
         bul.SetProcess(true);
