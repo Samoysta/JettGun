@@ -53,14 +53,13 @@ animations = [{
 "speed": 40.0
 }]
 
-[node name="Smoke1" type="Node2D"]
-modulate = Color(1, 0.83656925, 0.27684116, 1)
+[node name="Smoke1" type="Node2D" node_paths=PackedStringArray("sprite")]
+modulate = Color(2.2935755, 0.98099834, 0, 1)
 z_index = 1
 script = ExtResource("1_tnr6l")
 timer1 = 0.3
+sprite = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_3j7rb")
 autoplay = "default"
-frame = 5
-frame_progress = 1.0

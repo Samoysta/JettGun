@@ -611,7 +611,7 @@ public partial class Character : CharacterBody2D
         }
         else if (which == "Dash")
         {
-             if (dashEffects.Count == 0)
+            if (dashEffects.Count == 0)
             {
                 Effect effect = (Effect)node.Instantiate();
                 effect.Call("Init", this);
