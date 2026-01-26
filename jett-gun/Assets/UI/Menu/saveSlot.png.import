@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://daia2yfha04lx"
-path="res://.godot/imported/staminaProcess.png-311f78d7f9eaec800a0d46c7966520e6.ctex"
+uid="uid://dvug3oai4vm1o"
+path="res://.godot/imported/saveSlot.png-7d096c35ce0f427739e87289d0b2c498.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/UI/Stamina/staminaProcess.png"
-dest_files=["res://.godot/imported/staminaProcess.png-311f78d7f9eaec800a0d46c7966520e6.ctex"]
+source_file="res://Assets/UI/Menu/saveSlot.png"
+dest_files=["res://.godot/imported/saveSlot.png-7d096c35ce0f427739e87289d0b2c498.ctex"]
 
 [params]
 

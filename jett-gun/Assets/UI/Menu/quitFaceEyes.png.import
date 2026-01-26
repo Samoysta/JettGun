@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://daia2yfha04lx"
-path="res://.godot/imported/staminaProcess.png-311f78d7f9eaec800a0d46c7966520e6.ctex"
+uid="uid://bapoyubgb60x8"
+path="res://.godot/imported/quitFaceEyes.png-bc35cf535b578da1ec28db29204ec0e8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/UI/Stamina/staminaProcess.png"
-dest_files=["res://.godot/imported/staminaProcess.png-311f78d7f9eaec800a0d46c7966520e6.ctex"]
+source_file="res://Assets/UI/Menu/quitFaceEyes.png"
+dest_files=["res://.godot/imported/quitFaceEyes.png-bc35cf535b578da1ec28db29204ec0e8.ctex"]
 
 [params]
 

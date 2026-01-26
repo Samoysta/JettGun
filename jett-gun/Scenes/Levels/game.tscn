@@ -53,8 +53,9 @@ physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_3dryh")
 
-[sub_resource type="Environment" id="Environment_i6g32"]
+[sub_resource type="Environment" id="Environment_3dryh"]
 background_mode = 3
+background_canvas_max_layer = 1
 glow_enabled = true
 glow_blend_mode = 1
 
@@ -90,4 +91,4 @@ z_index = -2
 position = Vector2(843, 402)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Level1"]
-environment = SubResource("Environment_i6g32")
+environment = SubResource("Environment_3dryh")

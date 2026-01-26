@@ -53,7 +53,7 @@ animations = [{
 "speed": 40.0
 }]
 
-[node name="Smoke1" type="Node2D" node_paths=PackedStringArray("sprite")]
+[node name="Smoke1" type="Node2D" node_paths=PackedStringArray("sprite") groups=["Trash"]]
 modulate = Color(2.2935755, 0.98099834, 0, 1)
 z_index = 1
 script = ExtResource("1_tnr6l")

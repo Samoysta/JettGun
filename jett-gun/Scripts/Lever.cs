@@ -33,6 +33,11 @@ public partial class Lever : Node2D
         {
             anim.Play("LeverOpen");
             opened = true;   
+            pd.hasJettPack = true;
+            pd.canDash = true;
+            pd.canFire = true;
+            pd.percentage ++;
+            pd.Save();
         }
     }
 

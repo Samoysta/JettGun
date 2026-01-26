@@ -11,9 +11,10 @@ config_version=5
 [application]
 
 config/name="JettGun"
-run/main_scene="uid://dya0hilvet4em"
+run/main_scene="uid://p0u4d1jl1js8"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 run/max_fps=60
+boot_splash/bg_color=Color(0, 0, 0, 1)
 config/icon="res://icon.svg"
 
 [autoload]
@@ -26,8 +27,6 @@ window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/mode=3
 window/stretch/mode="viewport"
-window/snap/snap_2d_vertices_to_pixel=false
-window/snap/snap_2d_transforms_to_pixel=false
 
 [dotnet]
 
@@ -42,6 +41,7 @@ Fall=""
 Dash=""
 Halo=""
 Fire=""
+Trash=""
 
 [input]
 

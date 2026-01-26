@@ -24,6 +24,10 @@ public partial class Effect : Node2D
 		}
 		else
 		{
+			if (IsInGroup("Trash"))
+			{
+				QueueFree();
+			}
 			setOff();
 		}
     }

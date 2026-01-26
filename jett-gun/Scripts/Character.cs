@@ -56,6 +56,12 @@ public partial class Character : CharacterBody2D
     public Queue<Effect> fireEffects = new();
     public Queue<Effect> dashEffects = new();
     public Queue<Effect> haloEffects = new();
+    bool zPressed;
+    bool zReleased;
+    bool zHold;
+    bool rightHold;
+    bool leftHold;
+    bool cPressed;
     public override void _Ready()
     {
         staminaEffect1.Emitting = false;
@@ -78,6 +84,23 @@ public partial class Character : CharacterBody2D
         if (playerData.hasJettPack) JettPack.Visible = true; 
         jettPackEffect = JettPack.GetNode<CpuParticles2D>("JettPackParticles");
     }
+    public override void _Input(InputEvent action)
+    {
+        if (action.IsActionPressed("Z"))
+        {
+            zPressed = true;
+        }
+
+        if (action.IsActionReleased("Z"))
+        {
+            zReleased = true;
+        }
+
+        if (action.IsActionPressed("C"))
+        {
+            cPressed = true;
+        }
+    }
 
     public override void _Process(double delta)
     {
@@ -99,7 +122,7 @@ public partial class Character : CharacterBody2D
         }
         if (Mathf.Abs(staminaBar.Position.X - targetPos.X) < 100)
         {
-            staminaBar.SelfModulate = staminaBar.SelfModulate.Lerp(new Color(1,1,1,1), 5 * (float)delta);
+            staminaBar.SelfModulate = staminaBar.SelfModulate.Lerp(new Color(0,0.8f,1,1), 5 * (float)delta);
         }
         if (staminaBar.Position >= targetPos)
         {
@@ -240,6 +263,9 @@ public partial class Character : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
+        rightHold = Input.IsActionPressed("Right");
+        leftHold = Input.IsActionPressed("Left");
+        zHold = Input.IsActionPressed("Z");
         velocity.X = Velocity.X;
         // Düşme Animasyonu
 		if (!IsOnFloor() && dashDuration <= 0)
@@ -281,7 +307,7 @@ public partial class Character : CharacterBody2D
         //JettPack kısmı
         if (ctimer <= 0 && !isJumping)
         {
-            if (Input.IsActionPressed("Z") && playerData.hasJettPack && canJett && dashDuration <= 0 && currentStamina > 0)
+            if (zHold && playerData.hasJettPack && canJett && dashDuration <= 0 && currentStamina > 0)
             {
                 if (!jettPackEffect.Emitting) jettPackEffect.Emitting = true;
                 if (Velocity.Y != 0)
@@ -306,7 +332,7 @@ public partial class Character : CharacterBody2D
         if (dashDuration > 0)
         {
             if (canJett) canJett = false;
-            if (!Input.IsActionPressed("Z"))
+            if (!zHold)
             {
                 canJett = true;
             }
@@ -377,9 +403,9 @@ public partial class Character : CharacterBody2D
             }
         }
 		// Movement X
-		if (Input.IsActionPressed("Right") != Input.IsActionPressed("Left") && dashDuration <= 0)
+		if (rightHold != leftHold && dashDuration <= 0)
         {
-            if (Input.IsActionPressed("Right") && velocity.X <= Speed)
+            if (rightHold && velocity.X <= Speed)
 			{
 				velocity.X = Speed;
 				if (characterSprite.Scale.Y < 0)
@@ -388,7 +414,7 @@ public partial class Character : CharacterBody2D
                     characterSprite.RotationDegrees = 0;
                 }
 			}
-			else if (Input.IsActionPressed("Left") && velocity.X >= -Speed)
+			else if (leftHold && velocity.X >= -Speed)
 			{
 				velocity.X = -Speed;
 				if (characterSprite.Scale.Y > 0)
@@ -431,7 +457,7 @@ public partial class Character : CharacterBody2D
             }
         }
 		// Jump
-		if (Input.IsActionJustPressed("Z") && ctimer > 0 && dashDuration <= 0)
+		if (zPressed && ctimer > 0 && dashDuration <= 0)
 		{
             AnimatedSpriteSpawn(JumpEffect,foot.GlobalPosition, new Vector2(1,1), 0, "Jump");
             isJumping = true;
@@ -439,7 +465,7 @@ public partial class Character : CharacterBody2D
             jTimer = jumpTimer;
             ctimer = 0;
 		}
-        if (!Input.IsActionPressed("Z") && !IsOnFloor())
+        if (!zHold && !IsOnFloor())
         {
             if (!canJett)
             {
@@ -448,13 +474,13 @@ public partial class Character : CharacterBody2D
         }
         if (isJumping && dashDuration <= 0)
         {
-            if (Input.IsActionJustReleased("Z"))
+            if (zReleased)
             {
                 isJumping = false;
             }
             velocity.Y = -JumpVelocity;
         }
-        if (Input.IsActionJustPressed("C"))
+        if (cPressed)
         {
             if (playerData.canDash && maxDashAmount > 0)
             {
@@ -513,6 +539,9 @@ public partial class Character : CharacterBody2D
             }
             Velocity = new Vector2(Mathf.MoveToward(Velocity.X, velocity.X, accel * (float)delta), velocity.Y);   
         }
+        zPressed = false;
+        zReleased = false;
+        cPressed = false;
 		MoveAndSlide();
         
     }

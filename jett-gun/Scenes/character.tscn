@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=3 uid="uid://cnynjlm0luaf3"]
+[gd_scene load_steps=80 format=3 uid="uid://cnynjlm0luaf3"]
 
 [ext_resource type="Script" uid="uid://ckm7b4ws2w6iu" path="res://Scripts/Character.cs" id="1_lkv7d"]
 [ext_resource type="PackedScene" uid="uid://b87hgego6621s" path="res://Scenes/jump_dust_effect.tscn" id="2_owm7s"]
@@ -16,10 +16,11 @@
 [ext_resource type="PackedScene" uid="uid://d2q66qq1nxlqw" path="res://Scenes/bullet_1.tscn" id="9_wbia7"]
 [ext_resource type="Texture2D" uid="uid://dr3im1vmw6ko1" path="res://Assets/characterDashDown.png" id="11_le1tg"]
 [ext_resource type="Texture2D" uid="uid://c5bqkrp8prmf" path="res://Assets/UI/Stamina/staminaBG.png" id="16_w85my"]
-[ext_resource type="Texture2D" uid="uid://cdssdexf5bhf" path="res://Assets/UI/Stamina/staminaProcess.png" id="17_et0tf"]
+[ext_resource type="Texture2D" uid="uid://daia2yfha04lx" path="res://Assets/UI/Stamina/staminaProcess.png" id="17_et0tf"]
 [ext_resource type="Texture2D" uid="uid://nercr07g78v3" path="res://Assets/UI/Stamina/staminaOutline.png" id="18_hgna0"]
 [ext_resource type="Texture2D" uid="uid://dqid4lmwct3ol" path="res://Assets/UI/Stamina/particle.png" id="19_et0tf"]
 [ext_resource type="Texture2D" uid="uid://0e7mo0cg08ph" path="res://Assets/UI/Stamina/Ban.png" id="20_hgna0"]
+[ext_resource type="Script" uid="uid://ch3dl0nmxth4v" path="res://Scripts/Label.cs" id="21_s7tkn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_he2x2"]
 size = Vector2(46, 52.272705)
@@ -593,6 +594,8 @@ visible = false
 position = Vector2(11.604097, 3.41297)
 texture = ExtResource("20_hgna0")
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite/JettPack/Sprite2D"]
+
 [node name="Foot" type="Node2D" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite"]
 position = Vector2(-8.054681e-08, 37.43314)
 
@@ -646,7 +649,6 @@ one_shot = true
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Stamina" type="Node2D" parent="UI"]
-modulate = Color(1.1638972, 1.1638972, 1.1638972, 1)
 position = Vector2(412, 122)
 
 [node name="BG" type="Sprite2D" parent="UI/Stamina"]
@@ -680,6 +682,15 @@ scale_amount_curve = SubResource("Curve_w85my")
 
 [node name="Outline" type="Sprite2D" parent="UI/Stamina"]
 texture = ExtResource("18_hgna0")
+
+[node name="Node2D" type="Node2D" parent="UI"]
+scale = Vector2(3.575, 3.575)
+
+[node name="Label" type="Label" parent="UI/Node2D"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "fps"
+script = ExtResource("21_s7tkn")
 
 [connection signal="body_entered" from="InteractHitBox" to="." method="InteractEntered"]
 [connection signal="body_exited" from="InteractHitBox" to="." method="InteractExited"]

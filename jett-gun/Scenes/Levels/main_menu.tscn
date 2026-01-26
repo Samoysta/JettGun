@@ -1,0 +1,395 @@
+[gd_scene load_steps=14 format=3 uid="uid://p0u4d1jl1js8"]
+
+[ext_resource type="Script" uid="uid://b2wnd1daw117f" path="res://Scripts/MainButtons.cs" id="1_qqk0j"]
+[ext_resource type="Texture2D" uid="uid://dwonu6vfvglig" path="res://Assets/UI/Menu/GameConsole.png" id="2_vytfc"]
+[ext_resource type="Texture2D" uid="uid://c8metelj3qg1i" path="res://Assets/UI/Menu/settingsIcon.png" id="3_t475i"]
+[ext_resource type="Texture2D" uid="uid://b53qts8kxg4g7" path="res://Assets/UI/Menu/quitFace.png" id="4_gnv55"]
+[ext_resource type="Texture2D" uid="uid://ftb4qn511rpq" path="res://Assets/UI/BlackBG.png" id="4_xg7my"]
+[ext_resource type="Texture2D" uid="uid://bapoyubgb60x8" path="res://Assets/UI/Menu/quitFaceEyes.png" id="5_b7svq"]
+[ext_resource type="Texture2D" uid="uid://dvug3oai4vm1o" path="res://Assets/UI/Menu/saveSlot.png" id="6_b7svq"]
+[ext_resource type="Script" uid="uid://ddjpgudr8bggg" path="res://Scripts/PlayButtons.cs" id="6_wnywc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_2n722"]
+font_size = 80
+
+[sub_resource type="Animation" id="Animation_gnv55"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Face/Eye1:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Face/Eye2:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_wnywc"]
+resource_name = "TurningEyes"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Face/Eye1:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.2831855]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Face/Eye2:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -6.283185307179586]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6yab0"]
+_data = {
+&"RESET": SubResource("Animation_gnv55"),
+&"TurningEyes": SubResource("Animation_wnywc")
+}
+
+[sub_resource type="Environment" id="Environment_vytfc"]
+background_mode = 3
+background_canvas_max_layer = 1
+glow_enabled = true
+glow_blend_mode = 1
+
+[node name="MainMenu" type="Node2D"]
+
+[node name="MainMenu" type="CanvasLayer" parent="."]
+
+[node name="MainButtons" type="Node2D" parent="MainMenu" node_paths=PackedStringArray("buttons", "iconsBar", "buttonsParent", "selectedPos", "iconsBarParent", "icons", "anim", "buttons2")]
+modulate = Color(1.2363764, 1.2363764, 1.2363764, 1)
+script = ExtResource("1_qqk0j")
+buttons = [NodePath("buttons/Play"), NodePath("buttons/Settings"), NodePath("buttons/Quit")]
+iconsBar = NodePath("IconsBarParent/Sembols")
+buttonsParent = NodePath("buttons")
+selectedPos = NodePath("SelectedPos")
+iconsBarParent = NodePath("IconsBarParent")
+icons = [NodePath("IconsBarParent/Sembols/GameConsole"), NodePath("IconsBarParent/Sembols/SettingsIcon"), NodePath("IconsBarParent/Sembols/QuitIcon")]
+anim = NodePath("IconsBarParent/Sembols/QuitIcon/AnimationPlayer")
+buttons2 = [NodePath("buttons2/playButtons"), NodePath("buttons2/settingsButtons"), NodePath("buttons2/quitButtons")]
+
+[node name="buttons" type="Node2D" parent="MainMenu/MainButtons"]
+
+[node name="Play" type="Label" parent="MainMenu/MainButtons/buttons"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 816.0
+offset_top = 457.0
+offset_right = 1105.0
+offset_bottom = 622.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(142, 81)
+text = "PLAY"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Settings" type="Label" parent="MainMenu/MainButtons/buttons"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 685.0
+offset_top = 612.0
+offset_right = 1237.0
+offset_bottom = 777.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(276.5, 81)
+text = "SETTINGS"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Quit" type="Label" parent="MainMenu/MainButtons/buttons"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 629.0
+offset_top = 766.0
+offset_right = 1292.0
+offset_bottom = 931.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(329, 85)
+text = "QUIT GAME"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SelectedPos" type="Node2D" parent="MainMenu/MainButtons"]
+position = Vector2(-730, 0)
+
+[node name="IconsBarParent" type="Node2D" parent="MainMenu/MainButtons"]
+
+[node name="Sembols" type="Node2D" parent="MainMenu/MainButtons/IconsBarParent"]
+position = Vector2(960, 231)
+scale = Vector2(1.6, 1.6)
+
+[node name="GameConsole" type="Sprite2D" parent="MainMenu/MainButtons/IconsBarParent/Sembols"]
+texture = ExtResource("2_vytfc")
+
+[node name="SettingsIcon" type="Sprite2D" parent="MainMenu/MainButtons/IconsBarParent/Sembols"]
+self_modulate = Color(0.90794146, 0.90794176, 0.9079416, 1)
+position = Vector2(300, 0)
+texture = ExtResource("3_t475i")
+
+[node name="QuitIcon" type="Node2D" parent="MainMenu/MainButtons/IconsBarParent/Sembols"]
+position = Vector2(600, 0)
+
+[node name="Face" type="Sprite2D" parent="MainMenu/MainButtons/IconsBarParent/Sembols/QuitIcon"]
+self_modulate = Color(1.0627335, 1.0627335, 1.0627335, 1)
+position = Vector2(0, 38.83)
+rotation = -0.37631977
+scale = Vector2(1.93, 1.93)
+texture = ExtResource("4_gnv55")
+
+[node name="Eye1" type="Sprite2D" parent="MainMenu/MainButtons/IconsBarParent/Sembols/QuitIcon/Face"]
+position = Vector2(-34.662247, -37.688873)
+texture = ExtResource("5_b7svq")
+offset = Vector2(9.488068, 10.634888)
+
+[node name="Eye2" type="Sprite2D" parent="MainMenu/MainButtons/IconsBarParent/Sembols/QuitIcon/Face"]
+position = Vector2(43.345318, -36.768715)
+texture = ExtResource("5_b7svq")
+offset = Vector2(-8.736755, 11.749573)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MainMenu/MainButtons/IconsBarParent/Sembols/QuitIcon"]
+libraries = {
+&"": SubResource("AnimationLibrary_6yab0")
+}
+
+[node name="buttons2" type="Node2D" parent="MainMenu/MainButtons"]
+
+[node name="playButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2" node_paths=PackedStringArray("buttons", "userInfos", "actionButtons", "buttons2", "Parent")]
+modulate = Color(1, 1, 1, 0)
+script = ExtResource("6_wnywc")
+buttons = [NodePath("buttonsPlay/Player1/Button1"), NodePath("buttonsPlay/Player2/Button2"), NodePath("buttonsPlay/Player3/Button3"), NodePath("buttonsPlay/Player4/Button4")]
+userInfos = [NodePath("buttonsPlay/Player1/infoLabel1"), NodePath("buttonsPlay/Player2/infoLabel2"), NodePath("buttonsPlay/Player3/infoLabel3"), NodePath("buttonsPlay/Player4/infoLabel4")]
+actionButtons = NodePath("buttonsPlay/ActionButtons")
+buttons2 = [NodePath("buttonsPlay/ActionButtons/Play"), NodePath("buttonsPlay/ActionButtons/Delete")]
+Parent = NodePath("../..")
+
+[node name="buttonsPlay" type="Node2D" parent="MainMenu/MainButtons/buttons2/playButtons"]
+position = Vector2(0, -17)
+
+[node name="ActionButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay"]
+
+[node name="Play" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/ActionButtons"]
+offset_left = -20.0
+offset_top = 236.0
+offset_right = 141.0
+offset_bottom = 346.0
+pivot_offset = Vector2(76, 58)
+text = "Play"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Delete" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/ActionButtons"]
+offset_left = -70.0
+offset_top = 370.0
+offset_right = 181.0
+offset_bottom = 480.0
+pivot_offset = Vector2(136, 59)
+text = "Delete"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player1" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay"]
+self_modulate = Color(1.0627335, 1.0627335, 1.0627335, 1)
+position = Vector2(384, 518)
+texture = ExtResource("6_b7svq")
+
+[node name="Button1" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/Player1"]
+offset_left = -147.0
+offset_top = 89.0
+offset_right = 166.0
+offset_bottom = 199.0
+pivot_offset = Vector2(161, 55)
+text = "Player-1"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="infoLabel1" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/Player1"]
+offset_left = -123.0
+offset_top = -60.0
+offset_right = 122.0
+offset_bottom = 50.0
+scale = Vector2(0.525, 0.525)
+pivot_offset = Vector2(123.04761, 63)
+text = "Empty"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player2" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay"]
+self_modulate = Color(1.0627335, 1.0627335, 1.0627335, 1)
+position = Vector2(768, 518)
+texture = ExtResource("6_b7svq")
+
+[node name="Button2" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/Player2"]
+offset_left = -147.0
+offset_top = 89.0
+offset_right = 166.0
+offset_bottom = 199.0
+pivot_offset = Vector2(161, 55)
+text = "Player-2"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="infoLabel2" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/Player2"]
+offset_left = -123.0
+offset_top = -60.0
+offset_right = 122.0
+offset_bottom = 50.0
+scale = Vector2(0.525, 0.525)
+pivot_offset = Vector2(123.04761, 63)
+text = "Empty"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player3" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay"]
+self_modulate = Color(1.0627335, 1.0627335, 1.0627335, 1)
+position = Vector2(1152, 518)
+texture = ExtResource("6_b7svq")
+
+[node name="Button3" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/Player3"]
+offset_left = -147.0
+offset_top = 89.0
+offset_right = 166.0
+offset_bottom = 199.0
+pivot_offset = Vector2(161, 55)
+text = "Player-3"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="infoLabel3" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/Player3"]
+offset_left = -123.0
+offset_top = -60.0
+offset_right = 122.0
+offset_bottom = 50.0
+scale = Vector2(0.525, 0.525)
+pivot_offset = Vector2(123.04761, 63)
+text = "Empty"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player4" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay"]
+self_modulate = Color(1.0627335, 1.0627335, 1.0627335, 1)
+position = Vector2(1536, 518)
+texture = ExtResource("6_b7svq")
+
+[node name="Button4" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/Player4"]
+offset_left = -147.0
+offset_top = 89.0
+offset_right = 166.0
+offset_bottom = 199.0
+pivot_offset = Vector2(161, 55)
+text = "Player-4"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="infoLabel4" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/Player4"]
+offset_left = -123.0
+offset_top = -60.0
+offset_right = 122.0
+offset_bottom = 50.0
+scale = Vector2(0.525, 0.525)
+pivot_offset = Vector2(123.04761, 63)
+text = "Empty"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PLAYERS" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay"]
+modulate = Color(0.22073762, 0.5350727, 1.063, 1)
+offset_left = 802.0
+offset_top = 165.0
+offset_right = 1135.0
+offset_bottom = 275.0
+pivot_offset = Vector2(163, 60)
+text = "PLAYERS"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="settingsButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2"]
+
+[node name="quitButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2" node_paths=PackedStringArray("buttons", "buttonsParent", "icons", "buttons2")]
+modulate = Color(1, 1, 1, 0)
+script = ExtResource("1_qqk0j")
+buttons = [NodePath("buttonsQuit/no"), NodePath("buttonsQuit/yes")]
+buttonsParent = NodePath("buttonsQuit")
+icons = []
+buttons2 = []
+
+[node name="buttonsQuit" type="Node2D" parent="MainMenu/MainButtons/buttons2/quitButtons"]
+
+[node name="yes" type="Label" parent="MainMenu/MainButtons/buttons2/quitButtons/buttonsQuit"]
+offset_left = 861.0
+offset_top = 696.0
+offset_right = 1061.0
+offset_bottom = 806.0
+pivot_offset = Vector2(106, 57)
+text = "Yes :("
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="no" type="Label" parent="MainMenu/MainButtons/buttons2/quitButtons/buttonsQuit"]
+offset_left = 900.0
+offset_top = 562.0
+offset_right = 1026.0
+offset_bottom = 672.0
+pivot_offset = Vector2(63, 53)
+text = "NO"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="AreYouSure" type="Label" parent="MainMenu/MainButtons/buttons2/quitButtons/buttonsQuit"]
+modulate = Color(1.2742168, 0, 0, 1)
+offset_left = 784.0
+offset_top = 259.0
+offset_right = 1307.0
+offset_bottom = 369.0
+scale = Vector2(0.695, 0.695)
+text = "Are you sure?"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="MainMenu"]
+environment = SubResource("Environment_vytfc")
+
+[node name="BlackBg" type="Sprite2D" parent="MainMenu"]
+z_index = -10
+position = Vector2(999.49994, 509.50006)
+scale = Vector2(3.2953126, 1.8890623)
+texture = ExtResource("4_xg7my")
