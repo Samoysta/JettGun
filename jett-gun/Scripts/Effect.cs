@@ -38,7 +38,7 @@ public partial class Effect : Node2D
 	public void Play()
 	{
 		timer = timer1;
-		if (IsInGroup("Halo"))
+		if (IsInGroup("haveAnimPlayer"))
 		{
 			anim.Play("Start");
 		}
@@ -76,6 +76,11 @@ public partial class Effect : Node2D
 			{
 				character.fireEffects.Enqueue(this);
 				sprite.Frame = 0;
+			}
+			else if (IsInGroup("Ban"))
+			{
+				character.banEffects.Enqueue(this);
+				anim.Seek(0);
 			}
 			isOff = true;	
 		}

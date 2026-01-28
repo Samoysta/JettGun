@@ -1,0 +1,81 @@
+[gd_scene load_steps=6 format=3 uid="uid://dsr25lckbeq5n"]
+
+[ext_resource type="Script" uid="uid://dttmitoqfinmk" path="res://Scripts/Effect.cs" id="1_0x0qs"]
+[ext_resource type="Texture2D" uid="uid://0e7mo0cg08ph" path="res://Assets/UI/Stamina/Ban.png" id="1_wxins"]
+
+[sub_resource type="Animation" id="Animation_nw3qc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_s7tkn"]
+resource_name = "Ban"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.25000003, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rtvxd"]
+_data = {
+&"RESET": SubResource("Animation_nw3qc"),
+&"Start": SubResource("Animation_s7tkn")
+}
+
+[node name="BanEffect" type="Node2D" node_paths=PackedStringArray("anim") groups=["Ban", "haveAnimPlayer"]]
+script = ExtResource("1_0x0qs")
+timer1 = 0.5
+anim = NodePath("BanEffect/AnimationPlayer")
+
+[node name="BanEffect" type="Sprite2D" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 1
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("1_wxins")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="BanEffect"]
+libraries = {
+&"": SubResource("AnimationLibrary_rtvxd")
+}

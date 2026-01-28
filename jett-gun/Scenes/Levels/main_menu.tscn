@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://p0u4d1jl1js8"]
+[gd_scene load_steps=15 format=3 uid="uid://p0u4d1jl1js8"]
 
 [ext_resource type="Script" uid="uid://b2wnd1daw117f" path="res://Scripts/MainButtons.cs" id="1_qqk0j"]
 [ext_resource type="Texture2D" uid="uid://dwonu6vfvglig" path="res://Assets/UI/Menu/GameConsole.png" id="2_vytfc"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bapoyubgb60x8" path="res://Assets/UI/Menu/quitFaceEyes.png" id="5_b7svq"]
 [ext_resource type="Texture2D" uid="uid://dvug3oai4vm1o" path="res://Assets/UI/Menu/saveSlot.png" id="6_b7svq"]
 [ext_resource type="Script" uid="uid://ddjpgudr8bggg" path="res://Scripts/PlayButtons.cs" id="6_wnywc"]
+[ext_resource type="PackedScene" uid="uid://psf6r6kd7hyk" path="res://Scenes/Effects/Menu/reset_particle.tscn" id="7_6yab0"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_2n722"]
 font_size = 80
@@ -196,13 +197,13 @@ libraries = {
 [node name="buttons2" type="Node2D" parent="MainMenu/MainButtons"]
 
 [node name="playButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2" node_paths=PackedStringArray("buttons", "userInfos", "actionButtons", "buttons2", "Parent")]
-modulate = Color(1, 1, 1, 0)
 script = ExtResource("6_wnywc")
 buttons = [NodePath("buttonsPlay/Player1/Button1"), NodePath("buttonsPlay/Player2/Button2"), NodePath("buttonsPlay/Player3/Button3"), NodePath("buttonsPlay/Player4/Button4")]
 userInfos = [NodePath("buttonsPlay/Player1/infoLabel1"), NodePath("buttonsPlay/Player2/infoLabel2"), NodePath("buttonsPlay/Player3/infoLabel3"), NodePath("buttonsPlay/Player4/infoLabel4")]
 actionButtons = NodePath("buttonsPlay/ActionButtons")
 buttons2 = [NodePath("buttonsPlay/ActionButtons/Play"), NodePath("buttonsPlay/ActionButtons/Delete")]
 Parent = NodePath("../..")
+deleteEffect = ExtResource("7_6yab0")
 
 [node name="buttonsPlay" type="Node2D" parent="MainMenu/MainButtons/buttons2/playButtons"]
 position = Vector2(0, -17)
@@ -272,10 +273,17 @@ text = "Player-2"
 label_settings = SubResource("LabelSettings_2n722")
 
 [node name="infoLabel2" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/Player2"]
-offset_left = -123.0
-offset_top = -60.0
-offset_right = 122.0
-offset_bottom = 50.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -442.5
+offset_top = -375.0
+offset_right = -197.5
+offset_bottom = -265.0
+grow_horizontal = 2
+grow_vertical = 2
 scale = Vector2(0.525, 0.525)
 pivot_offset = Vector2(123.04761, 63)
 text = "Empty"

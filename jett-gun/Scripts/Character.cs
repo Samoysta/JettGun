@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
 
@@ -26,6 +27,7 @@ public partial class Character : CharacterBody2D
     [Export] Sprite2D staminaBar;
     [Export] CpuParticles2D staminaEffect1;
     [Export] float stamina;
+    [Export] PackedScene banEffect;
     float currentStamina;
     int maxDashAmount = 1;
     float dashDuration;
@@ -56,12 +58,16 @@ public partial class Character : CharacterBody2D
     public Queue<Effect> fireEffects = new();
     public Queue<Effect> dashEffects = new();
     public Queue<Effect> haloEffects = new();
+    public Queue<Effect> banEffects = new();
     bool zPressed;
     bool zReleased;
     bool zHold;
     bool rightHold;
     bool leftHold;
     bool cPressed;
+    [Export] ShaderMaterial mat;
+    [Export] float BanTimer;
+    float banTimer;
     public override void _Ready()
     {
         staminaEffect1.Emitting = false;
@@ -104,6 +110,29 @@ public partial class Character : CharacterBody2D
 
     public override void _Process(double delta)
     {
+        //ban Timer
+        if (banTimer > 0)
+        {
+            banTimer -= (float)delta;
+        }
+        // Stamina bar effect ban
+        if (currentStamina <= 0)
+        {
+            if (!(bool)mat.GetShaderParameter("blinking"))
+            {
+                mat.SetShaderParameter("blinking", true);
+            }
+            if (banTimer <= 0)
+            {
+                AnimatedSpriteSpawn(banEffect,GlobalPosition,new Vector2(1,1), 0, "Ban");
+                banTimer = BanTimer;
+            }
+            
+        }
+        else
+        {
+            mat.SetShaderParameter("blinking", false);
+        }
         //StaminaBar
         Vector2 targetPos = new Vector2((616 / stamina * currentStamina) - 616, 0);
         if (staminaBar.Position > targetPos)
@@ -648,6 +677,23 @@ public partial class Character : CharacterBody2D
                 GetTree().CurrentScene.AddChild(effect);
             }
             Effect Effect = dashEffects.Dequeue();
+            Effect.Call("Play");
+            Effect.isOff = false;
+            Effect.Visible = true;
+            Effect.GlobalPosition = pos;
+            Effect.GlobalScale *= scale;
+            Effect.GlobalRotationDegrees = rot;
+        }
+        else if (which == "Ban")
+        {
+            if (banEffects.Count == 0)
+            {
+                Effect effect = (Effect)node.Instantiate();
+                effect.Call("Init", this);
+                effect.Call("setOff");
+                GetTree().CurrentScene.AddChild(effect);
+            }
+            Effect Effect = banEffects.Dequeue();
             Effect.Call("Play");
             Effect.isOff = false;
             Effect.Visible = true;

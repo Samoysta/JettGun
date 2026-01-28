@@ -16,6 +16,7 @@ public partial class PlayButtons : Node2D
 	Tween[] tweens2;
 	bool selected;
 	PlayerData pd;
+	[Export] PackedScene deleteEffect;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -135,9 +136,16 @@ public partial class PlayButtons : Node2D
 				}
 				else if (buttons2[index2].Name == "Delete")
 				{
-					pd.saveIndex = index;
-					pd.DeleteSave();
-					updateInfos();
+					if (userInfos[index].Text != "Empty")
+					{
+						CpuParticles2D effect = (CpuParticles2D)deleteEffect.Instantiate();
+						effect.GlobalPosition = userInfos[index].GlobalPosition + new Vector2(62,32);
+						effect.Emitting = true;
+						GetParent().AddChild(effect);
+						pd.saveIndex = index;
+						pd.DeleteSave();
+						updateInfos();	
+					}
 				}
 			}
 		}

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://psf6r6kd7hyk"]
+
+[ext_resource type="Script" uid="uid://c7mgg8jof2pyo" path="res://Scripts/ParticleTrash.cs" id="1_e6wma"]
+
+[sub_resource type="Gradient" id="Gradient_6j52d"]
+offsets = PackedFloat32Array(0, 0.31658292, 0.45728642, 1)
+colors = PackedColorArray(1.353256, 1.353256, 1.353256, 1, 1.353256, 1.353256, 1.353256, 0.9607843, 1, 1, 1, 0.919598, 1, 1, 1, 0)
+
+[node name="ResetParticle" type="CPUParticles2D" groups=["Trash"]]
+emitting = false
+amount = 30
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+spread = 180.0
+gravity = Vector2(0, -400)
+initial_velocity_min = 200.0
+initial_velocity_max = 600.0
+linear_accel_min = -300.0
+linear_accel_max = -300.0
+scale_amount_min = 15.0
+scale_amount_max = 15.0
+color_ramp = SubResource("Gradient_6j52d")
+script = ExtResource("1_e6wma")
