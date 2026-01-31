@@ -7,6 +7,7 @@ public partial class PlayerData : Node
     string SAVE_PATH;
     // Player Datas (Oyuncu Dataları)
     public int percentage;
+    public string currentLevel = "game.tscn";
     public bool canFire;
     public bool canDash;
     public bool hasJettPack;
@@ -24,7 +25,8 @@ public partial class PlayerData : Node
             { "canFire", canFire },
             { "canDash", canDash },
             { "hasJettPack", hasJettPack },
-            { "percentage", percentage}
+            { "percentage", percentage},
+            { "currentLevel", currentLevel}
         };
 
         using var file = FileAccess.Open(SAVE_PATH, FileAccess.ModeFlags.Write);
@@ -49,6 +51,7 @@ public partial class PlayerData : Node
         canDash = (bool)data["canDash"];
         hasJettPack = (bool)data["hasJettPack"];
         percentage = (int)data["percentage"];
+        currentLevel = (string)data["currentLevel"];
 
         GD.Print("PLAYER DATA LOADED");
         return true;
@@ -60,6 +63,7 @@ public partial class PlayerData : Node
         canFire = false;
         canDash = false;
         hasJettPack = false;
+        currentLevel = "game.tscn";
     }
 
     public void DeleteSave()

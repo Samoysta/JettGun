@@ -59,7 +59,7 @@ background_canvas_max_layer = 1
 glow_enabled = true
 glow_blend_mode = 1
 
-[node name="Game" type="Node2D"]
+[node name="game" type="Node2D"]
 
 [node name="Level1" type="Node2D" parent="."]
 

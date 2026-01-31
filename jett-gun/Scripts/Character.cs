@@ -89,6 +89,7 @@ public partial class Character : CharacterBody2D
         anim = characterSprite.GetNode<AnimationPlayer>("AnimationPlayer");
         if (playerData.hasJettPack) JettPack.Visible = true; 
         jettPackEffect = JettPack.GetNode<CpuParticles2D>("JettPackParticles");
+        playerData.currentLevel = GetTree().CurrentScene.Name + ".tscn";
     }
     public override void _Input(InputEvent action)
     {
@@ -572,6 +573,7 @@ public partial class Character : CharacterBody2D
         zReleased = false;
         cPressed = false;
 		MoveAndSlide();
+        GlobalPosition = GlobalPosition.Round();
         
     }
 

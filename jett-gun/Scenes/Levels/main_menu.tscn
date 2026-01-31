@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://p0u4d1jl1js8"]
+[gd_scene load_steps=21 format=3 uid="uid://p0u4d1jl1js8"]
 
 [ext_resource type="Script" uid="uid://b2wnd1daw117f" path="res://Scripts/MainButtons.cs" id="1_qqk0j"]
 [ext_resource type="Texture2D" uid="uid://dwonu6vfvglig" path="res://Assets/UI/Menu/GameConsole.png" id="2_vytfc"]
@@ -73,6 +73,33 @@ _data = {
 &"RESET": SubResource("Animation_gnv55"),
 &"TurningEyes": SubResource("Animation_wnywc")
 }
+
+[sub_resource type="Gradient" id="Gradient_3o5t2"]
+offsets = PackedFloat32Array(0, 0.5270936, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 1, 0, 1, 0.03529412, 0.03529412, 0.03529412, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_f0reb"]
+gradient = SubResource("Gradient_3o5t2")
+width = 509
+height = 14
+
+[sub_resource type="Gradient" id="Gradient_6yab0"]
+offsets = PackedFloat32Array(0, 0.32512316, 0.50246304, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.102564104, 1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_w64ul"]
+gradient = SubResource("Gradient_6yab0")
+width = 679
+height = 14
+
+[sub_resource type="Gradient" id="Gradient_w64ul"]
+offsets = PackedFloat32Array(0.10344828, 0.55172414, 0.8965517)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_3o5t2"]
+gradient = SubResource("Gradient_w64ul")
+width = 594
+height = 14
 
 [sub_resource type="Environment" id="Environment_vytfc"]
 background_mode = 3
@@ -196,14 +223,19 @@ libraries = {
 
 [node name="buttons2" type="Node2D" parent="MainMenu/MainButtons"]
 
-[node name="playButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2" node_paths=PackedStringArray("buttons", "userInfos", "actionButtons", "buttons2", "Parent")]
+[node name="playButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2" node_paths=PackedStringArray("buttons", "userInfos", "actionButtons", "buttons2", "buttons3", "Parent", "deleteMenu", "blackScreen")]
+modulate = Color(1, 1, 1, 0)
 script = ExtResource("6_wnywc")
 buttons = [NodePath("buttonsPlay/Player1/Button1"), NodePath("buttonsPlay/Player2/Button2"), NodePath("buttonsPlay/Player3/Button3"), NodePath("buttonsPlay/Player4/Button4")]
 userInfos = [NodePath("buttonsPlay/Player1/infoLabel1"), NodePath("buttonsPlay/Player2/infoLabel2"), NodePath("buttonsPlay/Player3/infoLabel3"), NodePath("buttonsPlay/Player4/infoLabel4")]
 actionButtons = NodePath("buttonsPlay/ActionButtons")
 buttons2 = [NodePath("buttonsPlay/ActionButtons/Play"), NodePath("buttonsPlay/ActionButtons/Delete")]
+buttons3 = [NodePath("buttonsPlay/DeleteMenu/No"), NodePath("buttonsPlay/DeleteMenu/Yes")]
 Parent = NodePath("../..")
+deleteMenu = NodePath("buttonsPlay/DeleteMenu")
 deleteEffect = ExtResource("7_6yab0")
+blackScreen = NodePath("../BlackScreen")
+gameStartTime = 1.2
 
 [node name="buttonsPlay" type="Node2D" parent="MainMenu/MainButtons/buttons2/playButtons"]
 position = Vector2(0, -17)
@@ -212,9 +244,9 @@ position = Vector2(0, -17)
 
 [node name="Play" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/ActionButtons"]
 offset_left = -20.0
-offset_top = 236.0
+offset_top = 286.0
 offset_right = 141.0
-offset_bottom = 346.0
+offset_bottom = 396.0
 pivot_offset = Vector2(76, 58)
 text = "Play"
 label_settings = SubResource("LabelSettings_2n722")
@@ -223,14 +255,18 @@ vertical_alignment = 1
 
 [node name="Delete" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/ActionButtons"]
 offset_left = -70.0
-offset_top = 370.0
+offset_top = 420.0
 offset_right = 181.0
-offset_bottom = 480.0
+offset_bottom = 530.0
 pivot_offset = Vector2(136, 59)
 text = "Delete"
 label_settings = SubResource("LabelSettings_2n722")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="TitleLine" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/ActionButtons"]
+position = Vector2(64, 248)
+texture = SubResource("GradientTexture2D_f0reb")
 
 [node name="Player1" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay"]
 self_modulate = Color(1.0627335, 1.0627335, 1.0627335, 1)
@@ -353,6 +389,69 @@ pivot_offset = Vector2(163, 60)
 text = "PLAYERS"
 label_settings = SubResource("LabelSettings_2n722")
 
+[node name="TitleLine" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay"]
+modulate = Color(0, 0.30980393, 1, 1)
+position = Vector2(961, 272)
+texture = SubResource("GradientTexture2D_w64ul")
+
+[node name="DeleteMenu" type="Node2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay"]
+z_index = 2
+position = Vector2(961.00006, 437)
+scale = Vector2(1e-05, 1e-05)
+
+[node name="TitleLine" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/DeleteMenu"]
+modulate = Color(1, 0, 0, 1)
+texture = SubResource("GradientTexture2D_w64ul")
+
+[node name="Title" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/DeleteMenu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -249.23999
+offset_top = -126.95999
+offset_right = 278.76
+offset_bottom = -16.959991
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.64, 0.64)
+pivot_offset = Vector2(259, 61)
+text = "Are you Sure?"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="Yes" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/DeleteMenu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -67.00006
+offset_top = 91.0
+offset_right = 64.99994
+offset_bottom = 201.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(55, 66)
+text = "Yes"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="No" type="Label" parent="MainMenu/MainButtons/buttons2/playButtons/buttonsPlay/DeleteMenu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -56.00006
+offset_top = 243.0
+offset_right = 55.99994
+offset_bottom = 353.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(53, 36.5)
+text = "No"
+label_settings = SubResource("LabelSettings_2n722")
+
 [node name="settingsButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2"]
 
 [node name="quitButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2" node_paths=PackedStringArray("buttons", "buttonsParent", "icons", "buttons2")]
@@ -392,6 +491,19 @@ offset_bottom = 369.0
 scale = Vector2(0.695, 0.695)
 text = "Are you sure?"
 label_settings = SubResource("LabelSettings_2n722")
+
+[node name="TitleLine" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/quitButtons/buttonsQuit"]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(960, 390)
+texture = SubResource("GradientTexture2D_3o5t2")
+
+[node name="BlackScreen" type="Sprite2D" parent="MainMenu/MainButtons/buttons2"]
+modulate = Color(0, 0, 0, 0)
+self_modulate = Color(0, 0, 0, 1)
+z_index = 1
+position = Vector2(988.5, 469)
+scale = Vector2(4.0890627, 2.465625)
+texture = ExtResource("4_xg7my")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="MainMenu"]
 environment = SubResource("Environment_vytfc")
