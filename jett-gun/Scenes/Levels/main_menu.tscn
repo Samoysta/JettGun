@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://p0u4d1jl1js8"]
+[gd_scene load_steps=23 format=3 uid="uid://p0u4d1jl1js8"]
 
 [ext_resource type="Script" uid="uid://b2wnd1daw117f" path="res://Scripts/MainButtons.cs" id="1_qqk0j"]
 [ext_resource type="Texture2D" uid="uid://dwonu6vfvglig" path="res://Assets/UI/Menu/GameConsole.png" id="2_vytfc"]
@@ -91,6 +91,15 @@ colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.102564104, 1, 1, 1, 1, 0, 0, 0,
 gradient = SubResource("Gradient_6yab0")
 width = 679
 height = 14
+
+[sub_resource type="Gradient" id="Gradient_f0reb"]
+offsets = PackedFloat32Array(0.26108375, 0.5320197, 0.7635468)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_juchl"]
+gradient = SubResource("Gradient_f0reb")
+width = 914
+height = 9
 
 [sub_resource type="Gradient" id="Gradient_w64ul"]
 offsets = PackedFloat32Array(0.10344828, 0.55172414, 0.8965517)
@@ -452,7 +461,97 @@ pivot_offset = Vector2(53, 36.5)
 text = "No"
 label_settings = SubResource("LabelSettings_2n722")
 
-[node name="settingsButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2"]
+[node name="settingsButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2" node_paths=PackedStringArray("buttons", "icons", "buttons2", "VSync", "MaxFps")]
+script = ExtResource("1_qqk0j")
+buttons = [NodePath("buttonsSettings/buttons/Buttons/VSync"), NodePath("buttonsSettings/buttons/Buttons/Fps")]
+icons = []
+buttons2 = []
+VSync = NodePath("buttonsSettings/buttons/Buttons/VSync")
+MaxFps = NodePath("buttonsSettings/buttons/Buttons/Fps")
+
+[node name="buttonsSettings" type="Node2D" parent="MainMenu/MainButtons/buttons2/settingsButtons"]
+modulate = Color(1.0954857, 1.0954857, 1.0954857, 1)
+
+[node name="Title" type="Label" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings"]
+modulate = Color(0, 1, 0.38431373, 1)
+offset_left = 902.0
+offset_top = 37.0
+offset_right = 1270.0
+offset_bottom = 147.0
+pivot_offset = Vector2(185, 49)
+text = "SETTINGS"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="Sprite2D" type="Sprite2D" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/Title"]
+position = Vector2(158, 113)
+texture = SubResource("GradientTexture2D_juchl")
+
+[node name="buttons" type="Node2D" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings"]
+position = Vector2(816, 181)
+
+[node name="Titles" type="Node2D" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/buttons"]
+
+[node name="VSync" type="Label" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/buttons/Titles"]
+offset_right = 227.0
+offset_bottom = 110.0
+text = "VSync :"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="MaxFps" type="Label" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/buttons/Titles"]
+offset_left = -91.0
+offset_top = 150.0
+offset_right = 273.0
+offset_bottom = 260.0
+text = "Max FPS :"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="MasterVolume" type="Label" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/buttons/Titles"]
+offset_left = -354.0
+offset_top = 300.0
+offset_right = 275.0
+offset_bottom = 410.0
+text = "Master Volume :"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="Music" type="Label" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/buttons/Titles"]
+offset_left = 6.0
+offset_top = 450.0
+offset_right = 635.0
+offset_bottom = 560.0
+text = "Music :"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="SFX" type="Label" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/buttons/Titles"]
+offset_left = 97.0
+offset_top = 600.0
+offset_right = 726.0
+offset_bottom = 710.0
+text = "SFX :"
+label_settings = SubResource("LabelSettings_2n722")
+
+[node name="Buttons" type="Node2D" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/buttons"]
+
+[node name="VSync" type="Label" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/buttons/Buttons"]
+offset_left = 338.0
+offset_right = 464.0
+offset_bottom = 110.0
+pivot_offset = Vector2(65, 54)
+text = "ON"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Fps" type="Label" parent="MainMenu/MainButtons/buttons2/settingsButtons/buttonsSettings/buttons/Buttons"]
+offset_left = 313.0
+offset_top = 150.0
+offset_right = 494.0
+offset_bottom = 260.0
+pivot_offset = Vector2(90, 61)
+text = "60"
+label_settings = SubResource("LabelSettings_2n722")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="quitButtons" type="Node2D" parent="MainMenu/MainButtons/buttons2" node_paths=PackedStringArray("buttons", "buttonsParent", "icons", "buttons2")]
 modulate = Color(1, 1, 1, 0)

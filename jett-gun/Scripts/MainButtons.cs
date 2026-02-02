@@ -19,11 +19,35 @@ public partial class MainButtons : Node2D
 	Vector2 firstPos;
 	int index = 0;
 	Tween tween;
+	[Export] Godot.Label VSync;
+	[Export] Godot.Label MaxFps;
 	Tween[] tweens;
 	Tween tween2;
+	SettingsData settingsData;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		settingsData = GetNode<SettingsData>("/root/SettingsData");
+		if (this.Name == "settingsButtons")
+		{
+			if (settingsData.VSync)
+			{
+				VSync.Text = "ON";
+			}
+			else
+			{
+				VSync.Text = "OFF";
+			}
+			
+			if(settingsData.MaxFps != 0)
+			{
+				MaxFps.Text = $"{settingsData.MaxFps}";	
+			}
+			else
+			{
+				MaxFps.Text = "OFF";
+			}
+		}
 		if (this.Name == "MainButtons")
 		{
 			firstPos = iconsBar.GlobalPosition;	
@@ -100,6 +124,48 @@ public partial class MainButtons : Node2D
 			if (buttons[index].Name == "yes")
 			{
 				GetTree().Quit();
+			}
+			if (buttons[index].Name == "VSync")
+			{
+				if (buttons[index].Text == "ON")
+				{
+					buttons[index].Text = "OFF";
+					settingsData.VSync = false;
+					DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
+				}
+				else
+				{
+					buttons[index].Text = "ON";
+					settingsData.VSync = true;
+					DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Enabled);
+				}
+				settingsData.Save();
+			}
+			if (buttons[index].Name == "Fps")
+			{
+				string t = buttons[index].Text;
+				if (t == "60")
+				{
+					buttons[index].Text = "144";
+					Engine.MaxFps = 144;
+				}
+				else if (t == "144")
+				{
+					buttons[index].Text = "240";
+					Engine.MaxFps = 240;
+				}
+				else if (t == "240")
+				{
+					buttons[index].Text = "OFF";
+					Engine.MaxFps = 0;
+				}
+				else if (t == "OFF")
+				{
+					buttons[index].Text = "60";
+					Engine.MaxFps = 60;
+				}
+				settingsData.MaxFps = Engine.MaxFps;
+				settingsData.Save();
 			}
 		}
 		if (selected)
