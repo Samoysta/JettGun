@@ -1,4 +1,4 @@
-[gd_scene load_steps=82 format=3 uid="uid://cnynjlm0luaf3"]
+[gd_scene load_steps=98 format=3 uid="uid://cnynjlm0luaf3"]
 
 [ext_resource type="Script" uid="uid://ckm7b4ws2w6iu" path="res://Scripts/Character.cs" id="1_lkv7d"]
 [ext_resource type="Shader" uid="uid://dv6sqthsrw1no" path="res://Scripts/Shaders/red.gdshader" id="1_nw3qc"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://dsr25lckbeq5n" path="res://Scenes/Effects/ban_effect.tscn" id="8_nw3qc"]
 [ext_resource type="Texture2D" uid="uid://bkgdt3x5h7dni" path="res://Assets/characterDashUp.png" id="9_l1rcp"]
 [ext_resource type="PackedScene" uid="uid://d2q66qq1nxlqw" path="res://Scenes/bullet_1.tscn" id="9_wbia7"]
+[ext_resource type="Texture2D" uid="uid://dvm0qla5t42sm" path="res://Assets/stickmanAUp-Sheet.png" id="10_rtvxd"]
 [ext_resource type="Texture2D" uid="uid://dr3im1vmw6ko1" path="res://Assets/characterDashDown.png" id="11_le1tg"]
 [ext_resource type="Texture2D" uid="uid://c5bqkrp8prmf" path="res://Assets/UI/Stamina/staminaBG.png" id="16_w85my"]
 [ext_resource type="Texture2D" uid="uid://daia2yfha04lx" path="res://Assets/UI/Stamina/staminaProcess.png" id="17_et0tf"]
@@ -30,6 +31,115 @@ shader_parameter/blinking = false
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_he2x2"]
 size = Vector2(46, 52.272705)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1p4j"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(0, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xc5tg"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(640, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ef6re"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(1280, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a51um"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(1920, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u2x5a"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(2560, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nu2q0"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(3200, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47vys"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(3840, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wop2g"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(4480, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mup15"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(8320, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0hu16"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(5120, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_22jqy"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(5760, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ws7yy"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(6400, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow7x"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(7040, 0, 640, 640)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xtnjs"]
+atlas = ExtResource("10_rtvxd")
+region = Rect2(7680, 0, 640, 640)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dssvl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k1p4j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xc5tg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ef6re")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a51um")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u2x5a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nu2q0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_47vys")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wop2g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mup15")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0hu16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_22jqy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ws7yy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow7x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xtnjs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xtnjs")
+}],
+"loop": false,
+"name": &"Up",
+"speed": 50.0
+}]
 
 [sub_resource type="Gradient" id="Gradient_mvyft"]
 colors = PackedColorArray(1.269618, 1.269618, 0, 1, 1, 0, 0, 0)
@@ -554,7 +664,7 @@ dashDust = ExtResource("6_le1tg")
 dashEffect = ExtResource("7_2daya")
 staminaBar = NodePath("UI/Stamina/Polygon2D/Progress")
 staminaEffect1 = NodePath("UI/Stamina/Polygon2D/Progress/Right")
-stamina = 100.0
+stamina = 20.0
 banEffect = ExtResource("8_nw3qc")
 mat = SubResource("ShaderMaterial_rtvxd")
 BanTimer = 0.1
@@ -574,6 +684,12 @@ position = Vector2(0, 31.818167)
 material = SubResource("ShaderMaterial_rtvxd")
 position = Vector2(1.1920929e-07, -25.568172)
 scale = Vector2(1.48, 0.85)
+
+[node name="Tirpan" type="AnimatedSprite2D" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite"]
+visible = false
+scale = Vector2(0.99999994, 0.99999994)
+sprite_frames = SubResource("SpriteFrames_dssvl")
+animation = &"Up"
 
 [node name="JettPack" type="Sprite2D" parent="CharacterHitBox/Sprite/Sprite2/CharacterSprite"]
 visible = false

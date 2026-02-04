@@ -65,8 +65,11 @@ public partial class Character : CharacterBody2D
     bool rightHold;
     bool leftHold;
     bool cPressed;
+    bool TirpanUp;
+    bool canTirpanUp = true;
     [Export] ShaderMaterial mat;
     [Export] float BanTimer;
+    AnimatedSprite2D TirpanAnim;
     float banTimer;
     public override void _Ready()
     {
@@ -89,6 +92,7 @@ public partial class Character : CharacterBody2D
         anim = characterSprite.GetNode<AnimationPlayer>("AnimationPlayer");
         if (playerData.hasJettPack) JettPack.Visible = true; 
         jettPackEffect = JettPack.GetNode<CpuParticles2D>("JettPackParticles");
+        TirpanAnim = characterSprite.GetNode<AnimatedSprite2D>("Tirpan");
         playerData.currentLevel = GetTree().CurrentScene.Name + ".tscn";
     }
     public override void _Input(InputEvent action)
@@ -192,7 +196,7 @@ public partial class Character : CharacterBody2D
         //Ateş etme bölümü
         if (playerData.canFire)
         {
-            if (Input.IsActionPressed("X") && dashDuration <= 0)
+            if (Input.IsActionPressed("X") && dashDuration <= 0 && !TirpanUp)
             {
                 if (spriteUp.Visible)
                 {
@@ -249,7 +253,7 @@ public partial class Character : CharacterBody2D
                 }
             }
         }
-        if (gunCoolDown.IsStopped())
+        if (gunCoolDown.IsStopped() && !TirpanUp)
         {
             if (!spriteUp.Visible)
             {
@@ -261,7 +265,7 @@ public partial class Character : CharacterBody2D
             }
         }
         //Interact Yapma
-        if (Input.IsActionJustPressed("Down") && IsOnFloor() && dashDuration <= 0)
+        if (Input.IsActionJustPressed("Down") && IsOnFloor() && dashDuration <= 0 && !TirpanUp)
         {
             if (Interact.Count > 0)
             {
@@ -272,7 +276,7 @@ public partial class Character : CharacterBody2D
             }
         }
         //Interact Animasyon Yapma
-		if (Interact.Count > 0 && !IsOnFloor() && dashDuration <= 0)
+		if (Interact.Count > 0 && !IsOnFloor() && dashDuration <= 0 && !TirpanUp)
         {
             if (Interact[0].GetParent().HasMethod("InteractAnimEnd") && !calledInteract1)
             {
@@ -280,7 +284,7 @@ public partial class Character : CharacterBody2D
 				calledInteract1 = true;
             }
         }
-		else if (Interact.Count > 0 && IsOnFloor() && dashDuration <= 0)
+		else if (Interact.Count > 0 && IsOnFloor() && dashDuration <= 0 && !TirpanUp)
         {
             if (Interact[0].GetParent().HasMethod("InteractAnimStart") && calledInteract1)
             {
@@ -293,12 +297,44 @@ public partial class Character : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
+        velocity.X = Velocity.X;
+        //A Up Skill
+        if (Input.IsActionJustPressed("A") && dashDuration <= 0 && !TirpanUp && playerData.hasTirpan)
+        {
+            if (Input.IsActionPressed("Up") && canTirpanUp)
+            {
+                TirpanAnim.Visible = true;
+                spriteDown.Visible = false;
+                spriteUp.Visible = false;
+                ctimer = 0;
+                TirpanUp = true;
+                TirpanAnim.Play("Up");
+                canTirpanUp = false;
+            }
+        }
+        if (TirpanUp)
+        {
+            if (TirpanAnim.Frame < 10)
+            {
+                velocity = Vector2.Zero;
+            }
+            if (TirpanAnim.Frame == 10)
+            {
+                velocity.Y = - 2 * JumpVelocity;
+            }
+            if (TirpanAnim.Frame == 14)
+            {
+                TirpanUp = false;
+                TirpanAnim.Visible = false;
+                spriteDown.Visible = true;
+                spriteUp.Visible = true;
+            }
+        }
         rightHold = Input.IsActionPressed("Right");
         leftHold = Input.IsActionPressed("Left");
         zHold = Input.IsActionPressed("Z");
-        velocity.X = Velocity.X;
         // Düşme Animasyonu
-		if (!IsOnFloor() && dashDuration <= 0)
+		if (!IsOnFloor() && dashDuration <= 0 && !TirpanUp)
         {
             if (velocity.Y > 0)
             {
@@ -337,7 +373,7 @@ public partial class Character : CharacterBody2D
         //JettPack kısmı
         if (ctimer <= 0 && !isJumping)
         {
-            if (zHold && playerData.hasJettPack && canJett && dashDuration <= 0 && currentStamina > 0)
+            if (zHold && playerData.hasJettPack && canJett && dashDuration <= 0 && currentStamina > 0 && !TirpanUp)
             {
                 if (!jettPackEffect.Emitting) jettPackEffect.Emitting = true;
                 if (Velocity.Y != 0)
@@ -404,9 +440,19 @@ public partial class Character : CharacterBody2D
             }
         }
 		// Add the gravity.
-		if (!IsOnFloor() && velocity.Y < 1400 && dashDuration <= 0)
+		if (!IsOnFloor() && velocity.Y < 1400 && dashDuration <= 0 )
 		{
-			velocity += gravity * GetGravity() * (float)delta;
+            if (!TirpanUp)
+            {
+                velocity += gravity * GetGravity() * (float)delta;   
+            }
+            else
+            {
+                if (TirpanAnim.Frame > 10)
+                {
+                    velocity += gravity * GetGravity() * (float)delta;
+                }
+            }
 		}
 		// Tavana  ve Yere Çarpınca Y eksenindeki hızı sıfırlama
         // TAVAN ÇARPMA
@@ -419,6 +465,7 @@ public partial class Character : CharacterBody2D
         // YERE ÇARPMA
 		if (IsOnFloor() && velocity.Y > 0)
         {
+            canTirpanUp = true;
             currentStamina = stamina;
             canJett = false;
             anim.Play("Fall");
@@ -433,7 +480,7 @@ public partial class Character : CharacterBody2D
             }
         }
 		// Movement X
-		if (rightHold != leftHold && dashDuration <= 0)
+		if (rightHold != leftHold && dashDuration <= 0 && !TirpanUp)
         {
             if (rightHold && velocity.X <= Speed)
 			{
@@ -510,7 +557,8 @@ public partial class Character : CharacterBody2D
             }
             velocity.Y = -JumpVelocity;
         }
-        if (cPressed)
+        //Dash
+        if (cPressed && !TirpanUp)
         {
             if (playerData.canDash && maxDashAmount > 0)
             {
@@ -541,7 +589,7 @@ public partial class Character : CharacterBody2D
                 }
             }
         }
-        if (dashDuration > 0)
+        if (dashDuration > 0 && !TirpanUp)
         {
             if (velocity.X != 0)
             {
